@@ -1,0 +1,1365 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: course
+    description: Course content (weeks, lectures, topics)
+  - name: assignments
+    description: Homeworks, tests, midterm, final
+  - name: practice
+    description: Infinite practice sessions and adaptive problem generation
+  - name: tutor
+    description: AI tutor chat
+  - name: detection
+    description: AI-generation and diachronic detection
+  - name: analytics
+    description: User performance analytics and reports
+  - name: reasoning
+    description: Embedded diagnostic reasoning assessments and the course gradebook
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /course/overview:
+    get:
+      operationId: getCourseOverview
+      tags: [course]
+      summary: Course-level overview with weeks, assignments, and progress
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseOverview"
+
+  /course/weeks/{weekNumber}:
+    get:
+      operationId: getWeek
+      tags: [course]
+      summary: Get one week's lectures and assignment list
+      parameters:
+        - name: weekNumber
+          in: path
+          required: true
+          schema: { type: integer, minimum: 1, maximum: 4 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Week"
+
+  /course/lectures/{lectureId}:
+    get:
+      operationId: getLecture
+      tags: [course]
+      summary: Get the full lecture text for a topic
+      parameters:
+        - name: lectureId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lecture"
+
+  /course/lectures/{lectureId}/rewrite:
+    post:
+      operationId: rewriteLecture
+      tags: [course]
+      summary: Rewrite the lecture from the student's own instruction
+      description: >-
+        Produces a reader-directed rewrite of the lecture (e.g. more examples on
+        a point, a clearer illustration of a principle, shorter sentences) while
+        preserving every concept and learning objective. Persists the result as
+        the lecture's custom version and returns the updated lecture.
+      parameters:
+        - name: lectureId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RewriteLectureInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lecture"
+    delete:
+      operationId: clearLectureRewrite
+      tags: [course]
+      summary: Discard the custom rewrite and revert to the original lecture
+      parameters:
+        - name: lectureId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lecture"
+  /course/lectures/{lectureId}/examples:
+    post:
+      operationId: generateLectureExamples
+      tags: [course]
+      summary: Generate the "with lots of examples" variant for a given length
+      description: >-
+        Rewrites the chosen base length (short/medium/long) to keep the same
+        content and structure but add at least one vivid illustration to every
+        point. Caches the result on the matching bodyExamples column and returns
+        the updated lecture. If the variant already exists it is returned as-is.
+      parameters:
+        - name: lectureId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateLectureExamplesInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lecture"
+
+  /course/topics:
+    get:
+      operationId: listTopics
+      tags: [course]
+      summary: List all course topics (used for analytics + tutor scoping)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Topic"
+
+  /assignments:
+    get:
+      operationId: listAssignments
+      tags: [assignments]
+      summary: List all assignments (homeworks, tests, midterm, final)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AssignmentSummary"
+
+  /assignments/{assignmentId}:
+    get:
+      operationId: getAssignment
+      tags: [assignments]
+      summary: Get an assignment with its problems
+      parameters:
+        - name: assignmentId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Assignment"
+
+  /assignments/{assignmentId}/start:
+    post:
+      operationId: startAssignmentAttempt
+      tags: [assignments]
+      summary: Start (or resume) an attempt on an assignment
+      parameters:
+        - name: assignmentId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttemptState"
+
+  /assignments/attempts/{attemptId}:
+    get:
+      operationId: getAttempt
+      tags: [assignments]
+      summary: Get current attempt state (answers, time remaining)
+      parameters:
+        - name: attemptId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttemptState"
+
+  /assignments/attempts/{attemptId}/answer:
+    put:
+      operationId: saveAnswer
+      tags: [assignments]
+      summary: Save (or update) a single answer with keystroke trace
+      parameters:
+        - name: attemptId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnswerInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnswerSaved"
+
+  /assignments/attempts/{attemptId}/submit:
+    post:
+      operationId: submitAttempt
+      tags: [assignments]
+      summary: Submit the attempt for grading (also runs AI + diachronic detection)
+      parameters:
+        - name: attemptId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitAttemptInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttemptResult"
+
+  /admin/grader-lab:
+    post:
+      operationId: runGraderLab
+      tags: [admin]
+      summary: Admin debug — generate a spread of candidate answers for a problem and grade each (no AI detection)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GraderLabInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraderLabResult"
+
+  /assignments/{assignmentId}/practice:
+    post:
+      operationId: generatePracticeAssignment
+      tags: [practice]
+      summary: Generate a fresh, never-graded practice version of an assignment (infinite)
+      parameters:
+        - name: assignmentId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PracticeAssignmentSet"
+
+  /practice/assignment-sessions/{sessionId}/grade:
+    post:
+      operationId: gradePracticeAssignment
+      tags: [practice]
+      summary: Grade all answers in a practice-assignment set with rich coaching feedback
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PracticeAssignmentGradeInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PracticeAssignmentGrade"
+
+  /practice/sessions:
+    post:
+      operationId: startPracticeSession
+      tags: [practice]
+      summary: Start a new practice session (infinite, adaptive)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PracticeSessionInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PracticeSession"
+
+  /practice/sessions/{sessionId}/next:
+    post:
+      operationId: nextPracticeProblem
+      tags: [practice]
+      summary: Generate the next problem (adaptive difficulty, de-novo)
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NextProblemInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PracticeProblem"
+
+  /practice/sessions/{sessionId}/grade:
+    post:
+      operationId: gradePracticeAnswer
+      tags: [practice]
+      summary: Grade a practice answer; returns correct/incorrect and explanation
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PracticeAnswerInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PracticeGrade"
+
+  /tutor/ask:
+    post:
+      operationId: askTutor
+      tags: [tutor]
+      summary: Ask the AI tutor a question (text reply with optional spoken audio URL)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TutorAskInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TutorReply"
+
+  /detection/scan:
+    post:
+      operationId: scanText
+      tags: [detection]
+      summary: Run AI-generation + diachronic detection on a candidate answer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DetectionScanInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DetectionResult"
+
+  /analytics/summary:
+    get:
+      operationId: getAnalyticsSummary
+      tags: [analytics]
+      summary: Overall performance summary (averages, attempts, streaks)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsSummary"
+
+  /analytics/topics:
+    get:
+      operationId: getTopicAnalytics
+      tags: [analytics]
+      summary: Per-topic accuracy and strength/weakness ranking
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TopicAnalytics"
+
+  /analytics/activity:
+    get:
+      operationId: getRecentActivity
+      tags: [analytics]
+      summary: Recent practice + assignment activity timeline
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+  /analytics/report:
+    post:
+      operationId: generateReport
+      tags: [analytics]
+      summary: Generate a narrative strengths/weaknesses report
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsReport"
+
+  /reasoning/assessments:
+    get:
+      operationId: listReasoningAssessments
+      tags: [reasoning]
+      summary: List all diagnostic reasoning assessments with attempt status
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReasoningAssessmentSummary"
+
+  /reasoning/assessments/{assessmentId}:
+    get:
+      operationId: getReasoningAssessment
+      tags: [reasoning]
+      summary: Get one assessment with its items (no scoring keys exposed)
+      parameters:
+        - name: assessmentId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReasoningAssessment"
+
+  /reasoning/assessments/{assessmentId}/start:
+    post:
+      operationId: startReasoningAttempt
+      tags: [reasoning]
+      summary: Start (or resume) an attempt on a diagnostic assessment
+      parameters:
+        - name: assessmentId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StartReasoningBody"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReasoningAttemptState"
+
+  /reasoning/assessments/{assessmentId}/submit:
+    post:
+      operationId: submitReasoningAttempt
+      tags: [reasoning]
+      summary: Submit responses; records a pass and returns written feedback
+      parameters:
+        - name: assessmentId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitReasoningBody"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReasoningResult"
+
+  /reasoning/grades:
+    get:
+      operationId: getGradebook
+      tags: [reasoning]
+      summary: Course gradebook (coursework 100%; diagnostics are ungraded practice)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gradebook"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status: { type: string }
+      required: [status]
+
+    Topic:
+      type: object
+      required: [id, slug, title, weekNumber]
+      properties:
+        id: { type: integer }
+        slug: { type: string }
+        title: { type: string }
+        weekNumber: { type: integer }
+        blurb: { type: ["string", "null"] }
+
+    Lecture:
+      type: object
+      required: [id, topicId, title, weekNumber, body]
+      properties:
+        id: { type: integer }
+        topicId: { type: integer }
+        title: { type: string }
+        weekNumber: { type: integer }
+        body:
+          type: string
+          description: Short Markdown lecture text (the baseline / minimum-detail version). The frontend lets users select passages and send them to the tutor.
+        bodyMedium:
+          type: ["string", "null"]
+          description: Medium-length version with more explanation and more examples. Null if not yet generated.
+        bodyLong:
+          type: ["string", "null"]
+          description: Long version with the most explanation and the most examples. Null if not yet generated.
+        bodyCustom:
+          type: ["string", "null"]
+          description: A reader-directed rewrite of the lecture produced from the student's own instruction (e.g. add more examples, illustrate a principle, shorter sentences). Null until the student requests a rewrite.
+        customInstruction:
+          type: ["string", "null"]
+          description: The most recent instruction the student gave to produce bodyCustom. Null when there is no custom rewrite.
+        bodyShortExamples:
+          type: ["string", "null"]
+          description: The short version augmented with at least one vivid illustration per point. Null until the reader toggles examples on for the short length.
+        bodyMediumExamples:
+          type: ["string", "null"]
+          description: The medium version augmented with at least one vivid illustration per point. Null until the reader toggles examples on for the medium length.
+        bodyLongExamples:
+          type: ["string", "null"]
+          description: The long version augmented with at least one vivid illustration per point. Null until the reader toggles examples on for the long length.
+
+    Week:
+      type: object
+      required: [weekNumber, title, lectures, assignments]
+      properties:
+        weekNumber: { type: integer }
+        title: { type: string }
+        summary: { type: ["string", "null"] }
+        lectures:
+          type: array
+          items:
+            $ref: "#/components/schemas/LectureRef"
+        assignments:
+          type: array
+          items:
+            $ref: "#/components/schemas/AssignmentSummary"
+
+    LectureRef:
+      type: object
+      required: [id, title, topicId]
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        topicId: { type: integer }
+
+    AssignmentSummary:
+      type: object
+      required: [id, kind, title, weekNumber, problemCount, isTimed, status]
+      properties:
+        id: { type: integer }
+        kind:
+          type: string
+          enum: [homework, test, midterm, final]
+        title: { type: string }
+        weekNumber: { type: integer }
+        problemCount: { type: integer }
+        isTimed: { type: boolean }
+        timeLimitMinutes: { type: ["integer", "null"] }
+        status:
+          type: string
+          enum: [not_started, in_progress, submitted]
+        bestScore: { type: ["number", "null"] }
+        lastAttemptId: { type: ["integer", "null"] }
+
+    Assignment:
+      type: object
+      required: [id, kind, title, weekNumber, isTimed, problems]
+      properties:
+        id: { type: integer }
+        kind:
+          type: string
+          enum: [homework, test, midterm, final]
+        title: { type: string }
+        weekNumber: { type: integer }
+        isTimed: { type: boolean }
+        timeLimitMinutes: { type: ["integer", "null"] }
+        instructions: { type: ["string", "null"] }
+        problems:
+          type: array
+          items:
+            $ref: "#/components/schemas/Problem"
+
+    Problem:
+      type: object
+      required: [id, position, prompt, topicId]
+      properties:
+        id: { type: integer }
+        position: { type: integer }
+        prompt: { type: string }
+        topicId: { type: integer }
+        topicTitle: { type: ["string", "null"] }
+        hint: { type: ["string", "null"] }
+
+    AttemptState:
+      type: object
+      required: [id, assignmentId, status, startedAt, answers]
+      properties:
+        id: { type: integer }
+        assignmentId: { type: integer }
+        status:
+          type: string
+          enum: [in_progress, submitted]
+        startedAt: { type: string, format: date-time }
+        submittedAt: { type: ["string", "null"], format: date-time }
+        deadlineAt: { type: ["string", "null"], format: date-time }
+        answers:
+          type: array
+          items:
+            $ref: "#/components/schemas/SavedAnswer"
+
+    SavedAnswer:
+      type: object
+      required: [problemId, answer]
+      properties:
+        problemId: { type: integer }
+        answer: { type: string }
+        keystrokeCount: { type: ["integer", "null"] }
+        eraseCount: { type: ["integer", "null"] }
+
+    AnswerInput:
+      type: object
+      required: [problemId, answer, trace]
+      properties:
+        problemId: { type: integer }
+        answer: { type: string }
+        trace:
+          $ref: "#/components/schemas/KeystrokeTrace"
+
+    KeystrokeTrace:
+      type: object
+      required: [keystrokeCount, eraseCount, durationMs]
+      properties:
+        keystrokeCount: { type: integer }
+        eraseCount: { type: integer }
+        bulkInsertCount: { type: integer, default: 0 }
+        longestBulkInsertChars: { type: integer, default: 0 }
+        rewriteSegments: { type: integer, default: 0 }
+        durationMs: { type: integer }
+
+    AnswerSaved:
+      type: object
+      required: [ok]
+      properties:
+        ok: { type: boolean }
+
+    SubmitAttemptInput:
+      type: object
+      properties:
+        skipDetection:
+          type: boolean
+          default: false
+          description: Admin mode — grade the attempt but skip AI/diachronic detection.
+
+    GraderLabInput:
+      type: object
+      description: Provide a problemId to audit a real problem, or a custom prompt + correctAnswer.
+      properties:
+        problemId: { type: ["integer", "null"] }
+        prompt: { type: ["string", "null"] }
+        correctAnswer: { type: ["string", "null"] }
+
+    GraderLabResult:
+      type: object
+      required: [prompt, correctAnswer, cases]
+      properties:
+        prompt: { type: string }
+        correctAnswer: { type: string }
+        cases:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraderLabCase"
+
+    GraderLabCase:
+      type: object
+      required: [label, kind, expectedCorrect, answer, gradedCorrect, explanation, match]
+      properties:
+        label: { type: string }
+        kind: { type: string }
+        expectedCorrect: { type: boolean }
+        answer: { type: string }
+        gradedCorrect: { type: boolean }
+        explanation: { type: string }
+        match: { type: boolean }
+
+    AttemptResult:
+      type: object
+      required: [attemptId, score, total, percent, perProblem, detection]
+      properties:
+        attemptId: { type: integer }
+        score: { type: number }
+        total: { type: number }
+        percent: { type: number }
+        perProblem:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProblemResult"
+        detection:
+          type: array
+          items:
+            $ref: "#/components/schemas/DetectionResult"
+
+    ProblemResult:
+      type: object
+      required: [problemId, correct, explanation]
+      properties:
+        problemId: { type: integer }
+        correct: { type: boolean }
+        userAnswer: { type: string }
+        correctAnswer: { type: string }
+        explanation: { type: string }
+
+    PracticeSessionInput:
+      type: object
+      required: [tutorEnabled]
+      properties:
+        weekNumber: { type: ["integer", "null"] }
+        topicId: { type: ["integer", "null"] }
+        tutorEnabled: { type: boolean }
+        focusOnWeaknesses: { type: boolean, default: true }
+        initialDifficulty:
+          type: ["number", "null"]
+          description: Starting difficulty 1-5; if omitted defaults to 2.0
+
+    PracticeSession:
+      type: object
+      required: [id, tutorEnabled, difficulty, weekNumber]
+      properties:
+        id: { type: integer }
+        tutorEnabled: { type: boolean }
+        difficulty: { type: number }
+        weekNumber: { type: ["integer", "null"] }
+        topicId: { type: ["integer", "null"] }
+        focusOnWeaknesses: { type: boolean }
+
+    NextProblemInput:
+      type: object
+      properties:
+        request:
+          type: ["string", "null"]
+          description: Free-form user request, e.g. "give me harder probability problems"
+        topicId: { type: ["integer", "null"] }
+
+    PracticeProblem:
+      type: object
+      required: [id, prompt, topicId, difficulty]
+      properties:
+        id: { type: integer }
+        prompt: { type: string }
+        topicId: { type: integer }
+        topicTitle: { type: string }
+        difficulty: { type: number }
+
+    PracticeAnswerInput:
+      type: object
+      required: [problemId, answer, trace]
+      properties:
+        problemId: { type: integer }
+        answer: { type: string }
+        trace:
+          $ref: "#/components/schemas/KeystrokeTrace"
+
+    PracticeGrade:
+      type: object
+      required: [problemId, correct, explanation, newDifficulty]
+      properties:
+        problemId: { type: integer }
+        correct: { type: boolean }
+        correctAnswer: { type: string }
+        explanation: { type: string }
+        newDifficulty: { type: number }
+        tutorTip: { type: ["string", "null"] }
+
+    PracticeAssignmentSet:
+      type: object
+      required: [sessionId, assignmentId, title, kind, instructions, problems]
+      properties:
+        sessionId: { type: integer }
+        assignmentId: { type: integer }
+        title: { type: string }
+        kind: { type: string }
+        instructions: { type: ["string", "null"] }
+        problems:
+          type: array
+          items:
+            $ref: "#/components/schemas/PracticeAssignmentProblem"
+
+    PracticeAssignmentProblem:
+      type: object
+      required: [id, prompt, topicId]
+      properties:
+        id: { type: integer }
+        prompt: { type: string }
+        topicId: { type: integer }
+        topicTitle: { type: ["string", "null"] }
+
+    PracticeAssignmentGradeInput:
+      type: object
+      required: [answers]
+      properties:
+        answers:
+          type: array
+          items:
+            $ref: "#/components/schemas/PracticeAssignmentAnswer"
+
+    PracticeAssignmentAnswer:
+      type: object
+      required: [problemId, answer]
+      properties:
+        problemId: { type: integer }
+        answer: { type: string }
+        trace:
+          $ref: "#/components/schemas/KeystrokeTrace"
+
+    PracticeAssignmentGrade:
+      type: object
+      required: [score, total, percent, results]
+      properties:
+        score: { type: number }
+        total: { type: number }
+        percent: { type: number }
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/PracticeAssignmentResult"
+
+    PracticeAssignmentResult:
+      type: object
+      required: [problemId, prompt, correct, correctAnswer, feedback]
+      properties:
+        problemId: { type: integer }
+        prompt: { type: string }
+        correct: { type: boolean }
+        userAnswer: { type: string }
+        correctAnswer: { type: string }
+        feedback: { type: string }
+
+    TutorAskInput:
+      type: object
+      required: [message]
+      properties:
+        sessionId: { type: ["integer", "null"] }
+        message: { type: string }
+        selectedLectureText: { type: ["string", "null"] }
+        lectureId: { type: ["integer", "null"] }
+        problemId: { type: ["integer", "null"] }
+
+    TutorReply:
+      type: object
+      required: [text]
+      properties:
+        text: { type: string }
+        audioUrl: { type: ["string", "null"] }
+
+    DetectionScanInput:
+      type: object
+      required: [text, trace]
+      properties:
+        text: { type: string }
+        trace:
+          $ref: "#/components/schemas/KeystrokeTrace"
+
+    DetectionResult:
+      type: object
+      required: [problemId, aiScore, aiFlagged, diachronicScore, diachronicFlagged, rationale]
+      properties:
+        problemId: { type: ["integer", "null"] }
+        aiScore:
+          type: number
+          description: 0..1 probability the text is AI-generated
+        aiFlagged: { type: boolean }
+        diachronicScore:
+          type: number
+          description: 0..1 probability the user is rewording AI output (based on keystroke pattern)
+        diachronicFlagged: { type: boolean }
+        rationale: { type: string }
+
+    AnalyticsSummary:
+      type: object
+      required: [officialAverage, practiceAccuracy, attemptsCount, practiceCount, streakDays]
+      properties:
+        officialAverage: { type: number }
+        practiceAccuracy: { type: number }
+        attemptsCount: { type: integer }
+        practiceCount: { type: integer }
+        streakDays: { type: integer }
+        strongestTopic: { type: ["string", "null"] }
+        weakestTopic: { type: ["string", "null"] }
+
+    TopicAnalytics:
+      type: object
+      required: [topicId, topicTitle, weekNumber, attempts, accuracy, strengthLabel]
+      properties:
+        topicId: { type: integer }
+        topicTitle: { type: string }
+        weekNumber: { type: integer }
+        attempts: { type: integer }
+        accuracy: { type: number }
+        strengthLabel:
+          type: string
+          enum: [strong, solid, developing, weak, untested]
+
+    ActivityItem:
+      type: object
+      required: [id, kind, title, at]
+      properties:
+        id: { type: integer }
+        kind:
+          type: string
+          enum: [practice, assignment]
+        title: { type: string }
+        at: { type: string, format: date-time }
+        score: { type: ["number", "null"] }
+        topicTitle: { type: ["string", "null"] }
+
+    AnalyticsReport:
+      type: object
+      required: [generatedAt, narrative, strengths, weaknesses, recommendations]
+      properties:
+        generatedAt: { type: string, format: date-time }
+        narrative: { type: string }
+        strengths:
+          type: array
+          items: { type: string }
+        weaknesses:
+          type: array
+          items: { type: string }
+        recommendations:
+          type: array
+          items: { type: string }
+
+    CourseOverview:
+      type: object
+      required: [title, weeks, totals]
+      properties:
+        title: { type: string }
+        weeks:
+          type: array
+          items:
+            $ref: "#/components/schemas/Week"
+        totals:
+          type: object
+          required: [assignmentsCompleted, assignmentsTotal, practiceCount]
+          properties:
+            assignmentsCompleted: { type: integer }
+            assignmentsTotal: { type: integer }
+            practiceCount: { type: integer }
+
+    ReasoningAssessmentSummary:
+      type: object
+      required: [id, instrument, phase, format, title, itemCount, status]
+      properties:
+        id: { type: integer }
+        instrument:
+          type: string
+          enum: [subject, general]
+        phase:
+          type: string
+          enum: [before, third, twothirds, after]
+        format:
+          type: string
+          enum: [mcq, hybrid, written]
+          description: >-
+            The answer format of this version of the test: mcq (options only),
+            hybrid (options + a short written justification), or written (a
+            short written answer, no options).
+        title: { type: string }
+        subtitle: { type: ["string", "null"] }
+        itemCount: { type: integer }
+        status:
+          type: string
+          enum: [not_started, in_progress, passed]
+        lastAttemptId: { type: ["integer", "null"] }
+
+    ReasoningItem:
+      type: object
+      required: [id, position, prompt]
+      properties:
+        id: { type: integer }
+        position: { type: integer }
+        prompt: { type: string }
+        options:
+          type: ["array", "null"]
+          items: { type: string }
+          description: >-
+            The answer choices, for the mcq and hybrid formats. Null for the
+            written format, where no options are shown.
+
+    ReasoningAssessment:
+      type: object
+      required: [id, instrument, phase, format, title, instructions, status, items]
+      properties:
+        id: { type: integer }
+        instrument:
+          type: string
+          enum: [subject, general]
+        phase:
+          type: string
+          enum: [before, third, twothirds, after]
+        format:
+          type: string
+          enum: [mcq, hybrid, written]
+        title: { type: string }
+        subtitle: { type: ["string", "null"] }
+        instructions: { type: string }
+        status:
+          type: string
+          enum: [not_started, in_progress, passed]
+          description: >-
+            Whether this version of the test has an existing attempt. Used by the
+            client to decide whether to show the length picker (not_started) or
+            resume/review an existing attempt.
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReasoningItem"
+
+    ReasoningAttemptState:
+      type: object
+      required: [id, assessmentId, status, startedAt, items]
+      properties:
+        id: { type: integer }
+        assessmentId: { type: integer }
+        status:
+          type: string
+          enum: [in_progress, submitted]
+        startedAt: { type: string, format: date-time }
+        submittedAt: { type: ["string", "null"], format: date-time }
+        passed: { type: ["boolean", "null"] }
+        feedback: { type: ["string", "null"] }
+        headline:
+          type: ["string", "null"]
+          description: For a submitted attempt being reviewed — the score headline.
+        metrics:
+          type: ["array", "null"]
+          description: For a submitted attempt being reviewed — the score metrics.
+          items:
+            $ref: "#/components/schemas/ReasoningMetric"
+        review:
+          type: ["array", "null"]
+          description: For a submitted attempt being reviewed — per-question review with the student's answer and the correct answer.
+          items:
+            $ref: "#/components/schemas/ReasoningReviewItem"
+        items:
+          type: array
+          description: >-
+            The exact items to present for THIS attempt. The first take uses the
+            seeded template; each retake returns freshly generated questions of
+            the same kind (same instrument, skill areas, and structure).
+          items:
+            $ref: "#/components/schemas/ReasoningItem"
+
+    ReasoningResponseInput:
+      type: object
+      required: [itemId]
+      properties:
+        itemId: { type: integer }
+        selectedIndex:
+          type: ["integer", "null"]
+          description: mcq / hybrid — chosen option index.
+        writtenAnswer:
+          type: ["string", "null"]
+          description: written / hybrid — the student's short written answer.
+
+    RewriteLectureInput:
+      type: object
+      required: [instruction]
+      properties:
+        instruction:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          description: The student's plain-language instruction for how to rewrite the lecture (e.g. "add more examples to the section on intrinsic goodness", "use shorter sentences", "illustrate the open-question argument with a concrete case").
+        baseLevel:
+          type: string
+          enum: [short, medium, long, custom]
+          description: Which version of the lecture to rewrite from. Defaults to "short". Use "custom" to refine an existing rewrite further.
+
+    GenerateLectureExamplesInput:
+      type: object
+      required: [level]
+      properties:
+        level:
+          type: string
+          enum: [short, medium, long]
+          description: Which base length to produce the "with lots of examples" variant for.
+
+    StartReasoningBody:
+      type: object
+      properties:
+        retake:
+          type: boolean
+          description: >-
+            When true, begin a fresh attempt even if a previous attempt was
+            already submitted. An in-progress attempt is still resumed.
+        length:
+          type: string
+          enum: [short, medium, long]
+          description: >-
+            How many questions this attempt should have. Chosen before starting.
+            Defaults to "medium". Only applied when a brand-new attempt is
+            created; resuming an in-progress attempt keeps its original length.
+
+    SubmitReasoningBody:
+      type: object
+      required: [responses]
+      properties:
+        responses:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReasoningResponseInput"
+
+    ReasoningMetric:
+      type: object
+      required: [label, value]
+      properties:
+        label: { type: string }
+        value: { type: string }
+        detail: { type: ["string", "null"] }
+
+    ReasoningReviewItem:
+      type: object
+      required: [itemId, prompt]
+      properties:
+        itemId: { type: integer }
+        prompt: { type: string }
+        options:
+          type: ["array", "null"]
+          items: { type: string }
+          description: mcq / hybrid — the answer choices shown.
+        selectedIndex:
+          type: ["integer", "null"]
+          description: mcq / hybrid — the option index the student chose.
+        correctIndex:
+          type: ["integer", "null"]
+          description: mcq / hybrid — the correct option index.
+        isCorrect:
+          type: ["boolean", "null"]
+          description: Whether the student's answer was judged correct.
+        writtenAnswer:
+          type: ["string", "null"]
+          description: written / hybrid — the student's short written answer.
+        modelAnswer:
+          type: ["string", "null"]
+          description: written / hybrid — the reference model answer the response was graded against.
+        rationale:
+          type: ["string", "null"]
+          description: written — a short note on why the answer was or wasn't judged correct.
+
+    ReasoningResult:
+      type: object
+      required: [attemptId, passed, feedback, headline, metrics, review]
+      properties:
+        attemptId: { type: integer }
+        passed: { type: boolean }
+        feedback: { type: string }
+        headline: { type: string }
+        metrics:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReasoningMetric"
+        review:
+          type: array
+          description: Per-question review — each item with the student's answer and the correct answer.
+          items:
+            $ref: "#/components/schemas/ReasoningReviewItem"
+
+    GradeComponent:
+      type: object
+      required: [key, label, weightPercent, earnedPercent, detail]
+      properties:
+        key: { type: string }
+        label: { type: string }
+        weightPercent: { type: number }
+        earnedPercent: { type: number }
+        detail: { type: string }
+
+    GradebookCourseworkItem:
+      type: object
+      required: [id, kind, title, weekNumber, status]
+      properties:
+        id: { type: integer }
+        kind:
+          type: string
+          enum: [homework, test, midterm, final]
+        title: { type: string }
+        weekNumber: { type: integer }
+        status:
+          type: string
+          enum: [not_started, in_progress, submitted]
+        bestScore: { type: ["number", "null"] }
+
+    GradebookReasoningItem:
+      type: object
+      required: [id, instrument, phase, title, status]
+      properties:
+        id: { type: integer }
+        instrument:
+          type: string
+          enum: [subject, general]
+        phase:
+          type: string
+          enum: [before, third, twothirds, after]
+        title: { type: string }
+        status:
+          type: string
+          enum: [not_started, in_progress, passed]
+
+    Gradebook:
+      type: object
+      required: [overallPercent, letterGrade, components, coursework, reasoning]
+      properties:
+        overallPercent: { type: number }
+        letterGrade: { type: string }
+        components:
+          type: array
+          items:
+            $ref: "#/components/schemas/GradeComponent"
+        coursework:
+          type: array
+          items:
+            $ref: "#/components/schemas/GradebookCourseworkItem"
+        reasoning:
+          type: array
+          items:
+            $ref: "#/components/schemas/GradebookReasoningItem"
