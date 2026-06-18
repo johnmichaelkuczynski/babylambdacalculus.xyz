@@ -1,91 +1,47 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { AppShell } from '../AppShell';
 
 export function Scene2() {
   return (
     <motion.div 
-      className="absolute inset-0 bg-[#FDFCFB]"
+      className="absolute inset-0 flex items-center justify-center p-16"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.6 }}
+      exit={{ opacity: 0, x: -50 }}
+      transition={{ duration: 0.8 }}
     >
-      <AppShell activeTab="Dashboard">
-        <div className="p-10 w-full h-full flex flex-col max-w-6xl mx-auto overflow-hidden">
-          <motion.h2 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-3xl font-display font-bold text-[#1A2B3D] mb-8"
-          >
-            Welcome back, Student
-          </motion.h2>
+      <motion.div 
+        className="w-full h-[85%] relative rounded-2xl overflow-hidden shadow-2xl shadow-black/80 border border-white/10 bg-[#0B131E]"
+        initial={{ y: 40, rotateX: 10, scale: 0.95 }}
+        animate={{ y: 0, rotateX: 0, scale: 1 }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        style={{ perspective: 1200 }}
+      >
+        <motion.img 
+          src={`${import.meta.env.BASE_URL}screens/dashboard.jpg`}
+          className="w-full h-auto origin-top"
+          initial={{ y: 0 }}
+          animate={{ y: "-15%" }}
+          transition={{ duration: 5, ease: "linear" }}
+        />
+        
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+      </motion.div>
 
-          <div className="grid grid-cols-3 gap-6 mb-8">
-            {[
-              { label: 'Assignments', val: '2/14', sub: 'Unit 1 in progress' },
-              { label: 'Practice Problems', val: '124', sub: '92% accuracy' },
-              { label: 'Current Streak', val: '5 Days', sub: 'Keep it up!' }
-            ].map((kpi, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + i * 0.1 }}
-                className="bg-white p-6 rounded-lg border border-[#E2E8F0] shadow-sm"
-              >
-                <div className="text-sm font-medium text-[#4A5568] mb-2">{kpi.label}</div>
-                <div className="text-3xl font-display font-bold text-[#1A2B3D]">{kpi.val}</div>
-                <div className="text-xs text-[#718096] mt-2">{kpi.sub}</div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="flex gap-6 flex-1 min-h-0">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="flex-1 bg-white p-6 rounded-lg border border-[#E2E8F0] shadow-sm flex flex-col"
-            >
-              <h3 className="font-display font-bold text-lg mb-4">Current Unit</h3>
-              <div className="bg-[#1A2B3D] text-white p-6 rounded-md mb-4">
-                <div className="text-xs font-mono mb-2 opacity-80">UNIT 1</div>
-                <div className="text-xl font-display font-bold">Useful math without the infinite</div>
-                <div className="mt-6 flex justify-between items-end">
-                  <div className="w-2/3">
-                    <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-                      <div className="w-[15%] h-full bg-[#E76E50]" />
-                    </div>
-                  </div>
-                  <button className="bg-[#E76E50] text-white px-4 py-2 rounded-md text-sm font-medium">Continue</button>
-                </div>
-              </div>
-            </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="w-1/3 bg-white p-6 rounded-lg border border-[#E2E8F0] shadow-sm"
-            >
-              <h3 className="font-display font-bold text-lg mb-4">Recent Activity</h3>
-              <div className="space-y-4">
-                {[1,2,3].map(i => (
-                  <div key={i} className="flex gap-3 items-start">
-                    <div className="w-2 h-2 rounded-full bg-[#10B981] mt-1.5" />
-                    <div>
-                      <div className="text-sm font-medium text-[#1A2B3D]">Practice: Church Numerals</div>
-                      <div className="text-xs text-[#718096]">Score: 10/10 • 2h ago</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
+      <motion.div 
+        className="absolute bottom-24 left-32 bg-[#1A2B3D]/80 backdrop-blur-xl border border-white/20 p-8 rounded-2xl max-w-lg shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+        initial={{ opacity: 0, x: -40, filter: 'blur(10px)' }}
+        animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+        transition={{ delay: 0.8, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div className="w-10 h-10 rounded-full bg-[#E76E50] mb-4 flex items-center justify-center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
         </div>
-      </AppShell>
+        <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">Student Dashboard</h2>
+        <p className="text-lg text-white/70 leading-relaxed">
+          Track KPIs, view course schedules, and jump into optional diagnostic warm-ups.
+        </p>
+      </motion.div>
     </motion.div>
   );
 }

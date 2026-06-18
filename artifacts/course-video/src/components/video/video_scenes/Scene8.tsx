@@ -1,97 +1,90 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { AppShell } from '../AppShell';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function Scene8() {
-  const topicsList = [
-    { name: 'Everything Is a Function', acc: '98%', status: 'Strong', color: 'text-[#10B981]', bg: 'bg-[#10B981]/10' },
-    { name: 'Church Numerals', acc: '92%', status: 'Strong', color: 'text-[#10B981]', bg: 'bg-[#10B981]/10' },
-    { name: 'Booleans & Logic', acc: '75%', status: 'Developing', color: 'text-[#FBBF24]', bg: 'bg-[#FBBF24]/10' },
-    { name: 'The Y Combinator', acc: '45%', status: 'Weak', color: 'text-[#EF4444]', bg: 'bg-[#EF4444]/10' },
-  ];
+  const [phase, setPhase] = useState(0);
+
+  useEffect(() => {
+    const timers = [
+      setTimeout(() => setPhase(1), 1500),
+    ];
+    return () => timers.forEach(t => clearTimeout(t));
+  }, []);
 
   return (
     <motion.div 
-      className="absolute inset-0 bg-[#FDFCFB]"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.6 }}
+      className="absolute inset-0 flex items-center justify-center p-12 overflow-hidden"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 1.1 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
-      <AppShell activeTab="Analytics">
-        <div className="p-10 w-full h-full flex flex-col max-w-6xl mx-auto">
-          <motion.h2 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-3xl font-display font-bold text-[#1A2B3D] mb-8"
-          >
-            Performance Analytics
-          </motion.h2>
+      <div className="absolute inset-0 z-0">
+        <motion.img 
+          src={`${import.meta.env.BASE_URL}screens/diagnostics.jpg`}
+          className="w-full h-full object-cover opacity-20"
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 6, ease: "easeOut" }}
+        />
+        <div className="absolute inset-0 bg-[#0B131E]/80 backdrop-blur-sm" />
+      </div>
 
-          {/* KPIs */}
-          <div className="grid grid-cols-4 gap-4 mb-8">
-            {[
-              { l: 'Course Average', v: '91%' },
-              { l: 'Practice Accuracy', v: '87%' },
-              { l: 'Total Attempts', v: '243' },
-              { l: 'Current Streak', v: '12 Days' },
-            ].map((kpi, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white p-5 rounded-lg border border-[#E2E8F0] shadow-sm text-center"
-              >
-                <div className="text-sm font-medium text-[#718096] mb-2">{kpi.l}</div>
-                <div className="text-3xl font-display font-bold text-[#1A2B3D]">{kpi.v}</div>
-              </motion.div>
-            ))}
-          </div>
+      <div className="relative z-10 w-full max-w-6xl">
+        <motion.div 
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.8 }}
+        >
+          <h2 className="text-4xl font-bold text-white tracking-tight mb-4">Unprecedented Insight</h2>
+          <p className="text-xl text-white/70 max-w-2xl mx-auto">
+            One-click operator diagnostics and synthetic students to verify the grader's accuracy.
+          </p>
+        </motion.div>
 
-          {/* Mastery List */}
+        <div className="flex gap-8 items-center justify-center">
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="flex-1 bg-white rounded-lg border border-[#E2E8F0] shadow-sm overflow-hidden flex flex-col"
+            className="w-1/2 rounded-xl overflow-hidden shadow-2xl border border-white/20"
+            initial={{ rotateY: -15, x: -30, opacity: 0 }}
+            animate={{ rotateY: 0, x: 0, opacity: 1 }}
+            transition={{ delay: 0.6, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            style={{ perspective: 1000 }}
           >
-            <div className="p-4 border-b border-[#E2E8F0] bg-[#FDFCFB] font-bold text-[#1A2B3D]">
-              Topic Mastery
-            </div>
-            <div className="flex-1 p-2">
-              {topicsList.map((t, i) => (
-                <motion.div 
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.7 + i * 0.1 }}
-                  className="flex items-center justify-between p-4 border-b border-[#E2E8F0] last:border-0"
-                >
-                  <div className="font-medium text-[#1A2B3D] w-1/3">{t.name}</div>
-                  
-                  <div className="flex-1 px-8">
-                    <div className="h-2 w-full bg-[#E2E8F0] rounded-full overflow-hidden">
-                      <motion.div 
-                        className={`h-full ${t.bg.replace('/10', '')}`}
-                        initial={{ width: 0 }}
-                        animate={{ width: t.acc }}
-                        transition={{ delay: 1 + i * 0.1, duration: 0.8, type: "spring" }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="w-16 text-right font-mono font-bold text-[#1A2B3D]">{t.acc}</div>
-                  <div className="w-32 text-right">
-                    <span className={`px-2 py-1 rounded text-xs font-bold ${t.bg} ${t.color}`}>{t.status}</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            <img 
+              src={`${import.meta.env.BASE_URL}screens/diagnostics.jpg`}
+              className="w-full h-auto"
+            />
           </motion.div>
 
+          <AnimatePresence>
+            {phase >= 1 && (
+              <motion.div 
+                className="w-1/2 rounded-xl overflow-hidden shadow-2xl border border-[#10B981]/50 relative"
+                initial={{ rotateY: 15, x: 30, opacity: 0 }}
+                animate={{ rotateY: 0, x: 0, opacity: 1 }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                style={{ perspective: 1000 }}
+              >
+                <div className="absolute inset-0 bg-[#10B981]/10 mix-blend-overlay pointer-events-none" />
+                <img 
+                  src={`${import.meta.env.BASE_URL}screens/reasoning.jpg`}
+                  className="w-full h-auto"
+                />
+                
+                <motion.div 
+                  className="absolute bottom-6 right-6 bg-[#10B981] text-white px-4 py-2 rounded-lg font-bold shadow-lg"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 1.2, type: 'spring', damping: 15 }}
+                >
+                  Two-Layer AI Detection
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      </AppShell>
+      </div>
     </motion.div>
   );
 }

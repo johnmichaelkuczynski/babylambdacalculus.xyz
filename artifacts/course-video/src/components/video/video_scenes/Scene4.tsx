@@ -1,92 +1,55 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { AppShell } from '../AppShell';
+import { motion } from 'framer-motion';
 
 export function Scene4() {
   const [phase, setPhase] = useState(0);
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setPhase(1), 1500), // click toggle
+      setTimeout(() => setPhase(1), 1000),
     ];
     return () => timers.forEach(t => clearTimeout(t));
   }, []);
 
   return (
     <motion.div 
-      className="absolute inset-0 bg-[#FDFCFB]"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.6 }}
+      className="absolute inset-0 flex items-center justify-center p-16"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, y: 50 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
-      <AppShell activeTab="Assignments">
-        <div className="flex h-full w-full">
-          {/* Left Column: Lecture */}
-          <div className="flex-[3] flex flex-col border-r border-[#E2E8F0] bg-white h-full relative">
-            <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between">
-              <div className="text-sm font-medium text-[#718096]">1.2 Application and substitution: computation as rewriting</div>
-              <div className="flex items-center bg-[#EFECE6] rounded-md p-1">
-                <div className={`px-3 py-1 text-xs font-medium rounded ${phase === 0 ? 'bg-white shadow text-[#1A2B3D]' : 'text-[#718096]'}`}>Short</div>
-                <div className={`px-3 py-1 text-xs font-medium rounded ${phase === 1 ? 'bg-white shadow text-[#1A2B3D]' : 'text-[#718096]'}`}>Medium</div>
-                <div className="px-3 py-1 text-xs font-medium text-[#718096] rounded">Long</div>
-              </div>
-            </div>
-            <div className="flex-1 p-10 overflow-hidden relative">
-              <motion.h1 className="text-3xl font-display font-bold text-[#1A2B3D] mb-6">Computation is substitution</motion.h1>
-              
-              <AnimatePresence mode="popLayout">
-                {phase === 0 ? (
-                  <motion.div
-                    key="short"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="text-lg text-[#4A5568] leading-relaxed space-y-4"
-                  >
-                    <p>A function like λx. x is a rule with a placeholder — apply it to an argument and you plug that argument in.</p>
-                    <p>That single move, substituting the argument for the parameter, is called beta reduction — it is how the lambda calculus computes.</p>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="medium"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-lg text-[#4A5568] leading-relaxed space-y-4"
-                  >
-                    <p>A function like λx. x is a rule with a placeholder — apply it to an argument and you plug that argument in.</p>
-                    <p>That single move, substituting the argument for the parameter, is called beta reduction — it is how the lambda calculus computes.</p>
-                    <p>Apply the identity function to <em>a</em>: replace every x in the body with <em>a</em>. The whole thing becomes just <em>a</em> — no machine, only rewriting.</p>
-                    <div className="bg-[#FDFCFB] p-4 border border-[#E2E8F0] rounded-md font-mono text-sm mt-4 text-[#1A2B3D]">
-                      (λx. x) a<br/>
-                      → a
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-          
-          {/* Right Column: Blank AI Tutor placeholder for next scene */}
-          <div className="flex-[2] bg-[#FDFCFB] flex flex-col p-6">
-            <div className="text-sm font-bold text-[#1A2B3D] mb-4">AI TUTOR</div>
-            <div className="flex-1 border border-[#E2E8F0] rounded-lg bg-white flex items-center justify-center text-[#718096] text-sm">
-              Ready to practice?
-            </div>
-          </div>
+      <div className="w-full h-full flex flex-col items-center justify-center relative">
+        <motion.div 
+          className="w-[85%] h-[85%] relative rounded-2xl overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.6)] border border-white/10 bg-[#111]"
+          initial={{ y: 40 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <motion.img 
+            src={`${import.meta.env.BASE_URL}screens/practice.jpg`}
+            className="w-full h-auto origin-top"
+            initial={{ scale: 1.05, y: 0 }}
+            animate={{ scale: 1, y: "-15%" }}
+            transition={{ duration: 5, ease: "easeOut" }}
+          />
+        </motion.div>
 
-          <motion.div 
-            className="absolute z-50 w-6 h-6"
-            initial={{ x: '40vw', y: '25vh' }}
-            animate={{ x: '51vw', y: '6vh' }} // Click the Medium toggle
-            transition={{ delay: 0.5, duration: 0.8, ease: "easeInOut" }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A2B3D" strokeWidth="2" className="drop-shadow-md">
-              <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" fill="white" />
-            </svg>
-          </motion.div>
-        </div>
-      </AppShell>
+        <motion.div 
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#1A2B3D]/95 backdrop-blur-xl border border-white/20 p-10 rounded-2xl text-center shadow-2xl w-max"
+          initial={{ opacity: 0, scale: 0.8, filter: 'blur(10px)' }}
+          animate={phase >= 1 ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.8, filter: 'blur(10px)' }}
+          transition={{ type: 'spring', damping: 20, stiffness: 100 }}
+        >
+          <div className="w-16 h-16 mx-auto rounded-full bg-[#E76E50]/20 flex items-center justify-center border border-[#E76E50]/50 mb-6">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E76E50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          </div>
+          <h2 className="text-4xl font-bold text-white mb-4 tracking-tight">Adaptive Practice</h2>
+          <p className="text-xl text-white/70 max-w-sm mx-auto leading-relaxed">
+            Starts at easy, but the difficulty adapts as you go. Master each topic progressively.
+          </p>
+        </motion.div>
+      </div>
     </motion.div>
   );
 }

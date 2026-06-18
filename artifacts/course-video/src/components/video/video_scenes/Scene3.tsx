@@ -1,80 +1,89 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { AppShell } from '../AppShell';
+import { motion } from 'framer-motion';
 
 export function Scene3() {
-  const topics = [
-    "1.1 What the lambda calculus is: everything is a function",
-    "1.2 Application and substitution: computation as rewriting",
-    "1.3 Bound and free: variables, renaming, and why it matters",
-    "1.4 Building numbers from nothing: Church numerals",
-    "1.5 Booleans, logic, and choice from pure functions",
-    "1.6 Recursion from nowhere: the Y combinator",
-    "1.7 The punchline: lambda calculus equals Turing machines",
-    "1.8 From lambda to real languages (Capstone)"
-  ];
+  const [phase, setPhase] = useState(0);
+
+  useEffect(() => {
+    const timers = [
+      setTimeout(() => setPhase(1), 1200),
+      setTimeout(() => setPhase(2), 2800),
+    ];
+    return () => timers.forEach(t => clearTimeout(t));
+  }, []);
 
   return (
     <motion.div 
-      className="absolute inset-0 bg-[#FDFCFB]"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.6 }}
+      className="absolute inset-0 flex items-center justify-center p-12 overflow-hidden"
+      initial={{ opacity: 0, x: 50 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, scale: 1.05 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
-      <AppShell activeTab="Assignments">
-        <div className="p-10 w-full h-full flex flex-col max-w-5xl mx-auto overflow-hidden">
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+      <motion.div 
+        className="w-[110%] h-[110%] absolute z-0"
+        initial={{ scale: 1 }}
+        animate={{ scale: 1.1, x: "-5%" }}
+        transition={{ duration: 6, ease: "easeOut" }}
+      >
+        <img 
+          src={`${import.meta.env.BASE_URL}screens/lecture.jpg`}
+          className="w-full h-full object-cover object-left-top opacity-50"
+          style={{ filter: 'contrast(1.1) brightness(0.8)' }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent" />
+      </motion.div>
+
+      <div className="relative z-10 w-full max-w-7xl flex flex-col justify-center h-full">
+        <motion.div
+          className="max-w-xl"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="inline-block px-3 py-1 rounded-full bg-white/10 text-white font-bold text-sm tracking-wider uppercase mb-4">
+            Interactive Lectures
+          </div>
+          <h2 className="text-[4vw] font-black text-white leading-[1.1] mb-6 tracking-tight">
+            Three-Depth<br />Lessons
+          </h2>
+          <p className="text-xl text-white/70 leading-relaxed mb-8">
+            Toggle between Short, Medium, and Long explanations on the fly. 8 plain-language topics to master.
+          </p>
+        </motion.div>
+
+        <div className="flex flex-col gap-4 mt-4">
+          <motion.div 
+            className="flex items-center gap-4 bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-xl w-max shadow-2xl"
+            initial={{ opacity: 0, x: -30 }}
+            animate={phase >= 1 ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+            transition={{ type: 'spring', damping: 20 }}
           >
-            <div className="text-sm font-medium text-[#718096] mb-1">UNIT 1</div>
-            <h2 className="text-3xl font-display font-bold text-[#1A2B3D]">Useful math without the infinite</h2>
-            <p className="text-[#4A5568] mt-2">8 topics • Estimated time: 4 hours</p>
+            <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/50">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+            <div>
+              <div className="text-sm font-bold text-white/50 uppercase tracking-widest">Built-in</div>
+              <div className="text-white font-semibold text-lg">Streaming section-scoped AI Tutor</div>
+            </div>
           </motion.div>
 
-          <div className="flex-1 bg-white rounded-lg border border-[#E2E8F0] shadow-sm overflow-hidden flex flex-col relative">
-            <div className="absolute inset-0 overflow-y-auto p-2">
-              {topics.map((topic, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 + i * 0.1 }}
-                  className="flex items-center p-4 hover:bg-slate-50 border-b border-[#E2E8F0] last:border-0 group cursor-default"
-                >
-                  <div className="w-8 h-8 rounded-full bg-[#EFECE6] text-[#1A2B3D] flex items-center justify-center font-mono text-xs font-bold mr-4 shrink-0">
-                    {i+1}
-                  </div>
-                  <div className="flex-1 font-medium text-[#1A2B3D]">{topic}</div>
-                  <div className="w-20 text-right">
-                    {i === 0 ? (
-                      <span className="text-xs font-bold text-[#10B981] bg-[#10B981]/10 px-2 py-1 rounded">DONE</span>
-                    ) : i === 1 ? (
-                      <span className="text-xs font-bold text-[#E76E50] bg-[#E76E50]/10 px-2 py-1 rounded">START</span>
-                    ) : (
-                      <span className="text-xs text-[#718096]">0%</span>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
+          <motion.div 
+            className="flex items-center gap-4 bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-xl w-max shadow-2xl"
+            initial={{ opacity: 0, x: -30 }}
+            animate={phase >= 2 ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+            transition={{ type: 'spring', damping: 20 }}
+          >
+            <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/50">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
             </div>
-            
-            {/* Overlay cursor to show clicking the 2nd topic */}
-            <motion.div 
-              className="absolute z-50 w-6 h-6"
-              initial={{ x: '80vw', y: '80vh' }}
-              animate={{ x: '40vw', y: '25vh' }}
-              transition={{ delay: 1.5, duration: 0.8, ease: "easeInOut" }}
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A2B3D" strokeWidth="2" className="drop-shadow-md">
-                <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" fill="white" />
-              </svg>
-            </motion.div>
-          </div>
+            <div>
+              <div className="text-sm font-bold text-white/50 uppercase tracking-widest">Tools</div>
+              <div className="text-white font-semibold text-lg">Specialized math keyboard</div>
+            </div>
+          </motion.div>
         </div>
-      </AppShell>
+      </div>
     </motion.div>
   );
 }
