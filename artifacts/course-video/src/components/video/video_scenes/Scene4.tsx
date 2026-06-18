@@ -25,7 +25,7 @@ export function Scene4() {
           {/* Left Column: Lecture */}
           <div className="flex-[3] flex flex-col border-r border-[#E2E8F0] bg-white h-full relative">
             <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between">
-              <div className="text-sm font-medium text-[#718096]">1.2 Sets and logic: organizing the world into categories</div>
+              <div className="text-sm font-medium text-[#718096]">1.2 Application and substitution: computation as rewriting</div>
               <div className="flex items-center bg-[#EFECE6] rounded-md p-1">
                 <div className={`px-3 py-1 text-xs font-medium rounded ${phase === 0 ? 'bg-white shadow text-[#1A2B3D]' : 'text-[#718096]'}`}>Short</div>
                 <div className={`px-3 py-1 text-xs font-medium rounded ${phase === 1 ? 'bg-white shadow text-[#1A2B3D]' : 'text-[#718096]'}`}>Medium</div>
@@ -33,7 +33,7 @@ export function Scene4() {
               </div>
             </div>
             <div className="flex-1 p-10 overflow-hidden relative">
-              <motion.h1 className="text-3xl font-display font-bold text-[#1A2B3D] mb-6">When groups overlap</motion.h1>
+              <motion.h1 className="text-3xl font-display font-bold text-[#1A2B3D] mb-6">Computation is substitution</motion.h1>
               
               <AnimatePresence mode="popLayout">
                 {phase === 0 ? (
@@ -44,8 +44,8 @@ export function Scene4() {
                     exit={{ opacity: 0, y: -10 }}
                     className="text-lg text-[#4A5568] leading-relaxed space-y-4"
                   >
-                    <p>A set is just a well-defined collection — the people in a club, the cards in a deck.</p>
-                    <p>When two sets overlap, adding their sizes counts whatever they share twice, so you subtract the overlap.</p>
+                    <p>A function like λx. x is a rule with a placeholder — apply it to an argument and you plug that argument in.</p>
+                    <p>That single move, substituting the argument for the parameter, is called beta reduction — it is how the lambda calculus computes.</p>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -54,12 +54,12 @@ export function Scene4() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-lg text-[#4A5568] leading-relaxed space-y-4"
                   >
-                    <p>A set is just a well-defined collection — the people in a club, the cards in a deck.</p>
-                    <p>When two sets overlap, adding their sizes counts whatever they share twice, so you subtract the overlap.</p>
-                    <p>Picture two clubs: 20 hikers and 15 kayakers, with 6 people in both. Adding 20 + 15 counts those 6 twice — so the real number of people is <em>fewer</em> than 35.</p>
+                    <p>A function like λx. x is a rule with a placeholder — apply it to an argument and you plug that argument in.</p>
+                    <p>That single move, substituting the argument for the parameter, is called beta reduction — it is how the lambda calculus computes.</p>
+                    <p>Apply the identity function to <em>a</em>: replace every x in the body with <em>a</em>. The whole thing becomes just <em>a</em> — no machine, only rewriting.</p>
                     <div className="bg-[#FDFCFB] p-4 border border-[#E2E8F0] rounded-md font-mono text-sm mt-4 text-[#1A2B3D]">
-                      |A ∪ B| = |A| + |B| − |A ∩ B|<br/>
-                      20 + 15 − 6 = 29
+                      (λx. x) a<br/>
+                      → a
                     </div>
                   </motion.div>
                 )}

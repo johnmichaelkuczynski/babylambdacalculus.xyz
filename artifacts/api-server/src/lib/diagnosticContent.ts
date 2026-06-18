@@ -3,8 +3,8 @@
 //
 // Two instruments, each offered at FOUR time-points (phases) so a student can
 // gauge themselves before, during, and after the course:
-//   - subject  — Finite Math subject-specific reasoning. Realistic short
-//     cases about the course material (finite math); the best-supported
+//   - subject  — Lambda Calculus subject-specific reasoning. Realistic short
+//     cases about the course material (the lambda calculus); the best-supported
 //     answer is keyed first.
 //   - general  — General Reasoning. Genuine reasoning items spanning analysis,
 //     inference, evaluation, deduction, and induction (NOT a "docility"/agree-
@@ -86,27 +86,27 @@ export type GenSpec = { topicFocus: string; level: string };
 const SUBJECT_SPECS: Record<Phase, GenSpec> = {
   before: {
     level:
-      "Intro level: answerable by a thoughtful newcomer reasoning carefully, BEFORE any lessons. Do not assume prior course knowledge or technical terms. No heavy calculations — reward plain-language reasoning.",
+      "Intro level: answerable by a thoughtful newcomer reasoning carefully, BEFORE any lessons. Do not assume prior course knowledge or technical terms. No heavy formal derivations — reward plain-language reasoning.",
     topicFocus:
-      "What finite math is and how to think about it: that it is a toolkit of practical tools for questions about finite, countable, bounded situations (how many ways can something happen, how likely is it, what's the best choice given limits, how does money grow) rather than the infinite or continuous world of calculus; that its questions are about things you could in principle finish counting (cards in a deck, people in a room, routes among a few cities); and that it needs only arithmetic and careful reasoning, no calculus, which is exactly why it is the math most used in business and everyday life.",
+      "What the lambda calculus is and how to think about it: that it is a tiny, complete model of computation built from nothing but functions (no numbers, no data, no commands), where the only moves are naming a variable, defining a function, and applying a function to an argument; that surprisingly everything else — numbers, true/false, data, and repetition — can be ENCODED as functions rather than built in; and that it needs no machine at all, just functions transforming functions, which is exactly why it underlies functional programming and the very definition of what is computable.",
   },
   third: {
     level:
-      "Early course level: covers roughly the first third of the unit. Plain language, short realistic cases, no heavy calculations.",
+      "Early course level: covers roughly the first third of the unit. Plain language, short realistic cases, no heavy formal derivations.",
     topicFocus:
-      "Topics 1.1-1.3: what finite math is (a toolkit for countable, bounded questions, no calculus); sets and logic (a set is a well-defined collection; union is the 'or', intersection the 'and', complement the 'not'; a Venn diagram avoids double-counting by adding two groups and subtracting their overlap; and-or-not and if-then logic); and the art of counting (the multiplication principle; permutations count arrangements where ORDER MATTERS, combinations count selections where order does NOT, with always fewer combinations — the deciding test is whether rearranging the same items creates something new).",
+      "Topics 1.1-1.3: what the lambda calculus is (a language of only functions, built from variables, abstraction λx. body, and application f x); application and substitution (computation is rewriting by beta reduction — when a function meets an argument you substitute the argument for the parameter — repeated until normal form, the answer, though some expressions never stop); and bound vs. free variables (a bound variable is the local name a function introduces and its name is arbitrary; a free variable comes from outside; careless substitution can cause variable capture, fixed by alpha renaming the bound variable).",
   },
   twothirds: {
     level:
-      "Mid course level: covers roughly the first two-thirds of the unit. Realistic short cases requiring a step of reasoning, no heavy calculations.",
+      "Mid course level: covers roughly the first two-thirds of the unit. Realistic short cases requiring a step of reasoning, no heavy formal derivations.",
     topicFocus:
-      "Topics 1.1-1.6: what finite math is, sets and logic, and counting (permutations vs. combinations), PLUS probability (a number from 0 to 1, favorable outcomes over total when equally likely; 'or' adds chances and subtracts overlap, independent 'and' multiplies; conditional probability is how a likelihood changes given new information; expected value is the probability-weighted average over many repeats), matrices (a grid of numbers in rows and columns; addition combines matching entries; a system of equations becomes a matrix solved by a fixed mechanical procedure), and linear programming (an objective plus constraints carve out a feasible region, and the corner principle says the best answer is always at a corner, so only finitely many corners need checking).",
+      "Topics 1.1-1.6: what the lambda calculus is, application and beta reduction, and bound vs. free variables, PLUS Church numerals (a number is encoded as how many times a function is applied: zero is λf. λx. x, two is λf. λx. f (f x); arithmetic becomes manipulating repetition — the deep lesson that data can be encoded as behavior), booleans and logic (TRUE picks the first of two options λa. λb. a and FALSE the second λa. λb. b, so if-then-else comes for free by applying the condition to the two branches, and AND/OR/NOT and pairs are built by wiring choosers), and the Y combinator (a nameless function can't call itself, so you pass the function to itself; the Y combinator automates this self-application — a fixed-point combinator — to give recursion with no names).",
   },
   after: {
     level:
-      "End-of-course level: covers the whole unit. Integrative short cases that apply more than one idea, no heavy calculations.",
+      "End-of-course level: covers the whole unit. Integrative short cases that apply more than one idea, no heavy formal derivations.",
     topicFocus:
-      "The full unit, topics 1.1-1.8: what finite math is, sets and logic, counting, probability, matrices, and linear programming, PLUS the math of money (simple interest is paid only on the original amount; compound interest pays interest on interest, so money grows exponentially and early saving wins because the later high-balance years add the most; loans charge compound interest and regular payments cover interest first; an annuity is a stream of equal payments) and putting finite math to work (it is a toolbox whose tools combine on real problems — e.g. counting + probability + the math of money to price insurance — and the deepest takeaway is a habit of making messy decisions precise enough to become countable, measurable, and solvable).",
+      "The full unit, topics 1.1-1.8: what the lambda calculus is, beta reduction, bound/free variables, Church numerals, booleans and logic, and the Y combinator, PLUS the equivalence with Turing machines (two utterly different models — a tape-and-head machine and pure functions — can simulate each other, so they have exactly the same power; the Church–Turing thesis defines 'computable' as what they can do; and the halting problem is a provable limit, since no program can decide whether an arbitrary computation halts) and from lambda to real languages (real languages are the lambda calculus plus conveniences — names, loops, native numbers/booleans/types as sugar over substitution — with Lisp, ML, Haskell, and the first-class functions in mainstream languages descending directly from it; the deepest takeaway is computation as transformation of inputs through functions).",
   },
 };
 
@@ -152,7 +152,7 @@ const FORMAT_LABEL: Record<DiagFormat, string> = {
 function instructionsFor(instrument: Instrument, format: DiagFormat): string {
   const subject =
     instrument === "subject"
-      ? "Answer each question about finite math — these reward careful reasoning about realistic cases (no heavy calculations), not memorized facts"
+      ? "Answer each question about the lambda calculus — these reward careful reasoning about realistic cases (no heavy formal derivations), not memorized facts"
       : "Answer each reasoning question — these measure how you think, not what you recall";
   const body =
     format === "mcq"
@@ -164,86 +164,86 @@ function instructionsFor(instrument: Instrument, format: DiagFormat): string {
 }
 
 // ===========================================================================
-// SUBJECT — Finite Math blueprint cases (best answer keyed FIRST)
+// SUBJECT — Lambda Calculus blueprint cases (best answer keyed FIRST)
 // ===========================================================================
 
 const SUBJECT_BEFORE: DiagItem[] = [
   {
     prompt:
-      "A friend says, 'Math only becomes useful once you reach calculus — everything before that is just arithmetic.' How would someone who understands what this course is about most likely respond?",
+      "A friend says, 'Computation needs a machine — chips, memory, and instructions being executed; you could never capture it with just math.' How would someone who understands what this course is about most likely respond?",
     options: [
-      "Not really — finite math answers a huge range of practical questions (how many ways, how likely, what's the best choice) using only careful reasoning, no calculus",
-      "That's correct; nothing useful happens in math before calculus",
-      "Finite math is just calculus taught more slowly",
-      "It's true, because finite math is only about memorizing definitions",
+      "Not really — the lambda calculus shows that all of computation can be captured by functions alone, with no machine at all, which is exactly why it's studied as the essence of computing",
+      "That's correct; without hardware there is no computation to speak of",
+      "The lambda calculus is just a slow way of describing a physical computer",
+      "It's true, because math can only describe numbers, never processes",
     ],
     modelAnswer:
-      "Finite math is a toolkit for countable, everyday questions — counting possibilities, measuring chance, optimizing under limits, handling money — and it needs only arithmetic and clear thinking, so plenty of the most useful math arrives well before calculus.",
+      "The lambda calculus is a complete model of computation built from nothing but functions — no machine, memory, or instructions — so computation turns out to be expressible as pure functions transforming functions, which is why it's taken as the essence of computing.",
   },
   {
     prompt:
-      "Which of these questions is the kind of thing finite math is built to answer?",
+      "In the lambda calculus 'everything is a function.' Which statement best captures what that means?",
     options: [
-      "How many different 4-person teams can be formed from a group of ten people?",
-      "What is the exact slope of a curve at a single instant?",
-      "What is the area under a curve that stretches on forever?",
-      "What value does an endless running total approach?",
+      "There is only one kind of thing — functions that take functions and return functions — and things like numbers and true/false are built from them rather than given",
+      "It means every function must return a number as its result",
+      "It means the language has functions plus a few built-in numbers and commands",
+      "It means functions are just a convenient shortcut for writing arithmetic",
     ],
     modelAnswer:
-      "Finite math handles countable, bounded situations like 'how many ways can a team be chosen?' — questions you could in principle finish counting — rather than the curves, instants, and endless processes that belong to calculus.",
+      "The lambda calculus has only one kind of thing, the function; there are no built-in numbers, booleans, or data, so everything else must be encoded out of functions — that is what 'everything is a function' means.",
   },
   {
     prompt:
-      "Which statement best captures what makes finite math 'finite'?",
+      "Why would anyone study a 'language' stripped down to almost nothing — just variables, defining a function, and applying one?",
     options: [
-      "It studies countable, bounded situations you could in principle finish counting, rather than the infinite or continuous",
-      "It only allows you to use small numbers",
-      "It is finite because every problem has exactly one possible answer",
-      "It avoids math entirely and is really just common sense",
+      "Because a system small enough to reason about completely lets you prove what computation can and cannot do — and, surprisingly, it turns out to be as powerful as any computer",
+      "Because smaller languages are always easier to type quickly",
+      "Because it is only a historical curiosity with no real consequences",
+      "Because removing features is the only way to make a language run faster",
     ],
     modelAnswer:
-      "'Finite' means the subject deliberately stays where things can be listed, counted, and compared — decks of cards, groups of people, a few routes — instead of the endless or continuous world that calculus is built for.",
+      "Stripping computation down to its essence makes it possible to reason about it completely and prove what is and isn't computable; the striking payoff is that this tiny system is exactly as powerful as any computer.",
   },
 ];
 
 const SUBJECT_THIRD: DiagItem[] = [
   {
     prompt:
-      "A club reports 20 members signed up for the hike and 15 for the kayak trip, and someone concludes 35 different members signed up for something. Using sets, the best reasoning is:",
+      "The identity function λx. x is applied to some argument a. A student says the result is 'just λx. x again.' Using beta reduction, what's the best correction?",
     options: [
-      "It may be fewer than 35, because members who signed up for both get counted twice unless you subtract the overlap",
-      "It must be exactly 35, since you just add the two groups",
-      "It must be more than 35, because some people sign up twice",
-      "There's no way to say anything without listing every member",
+      "It reduces to a — beta reduction substitutes the argument for the parameter, and the identity function hands back whatever it is given",
+      "It stays λx. x, because applying a function never changes it",
+      "It reduces to x, the leftover parameter name",
+      "There is no answer, since the lambda calculus can't apply functions",
     ],
     modelAnswer:
-      "Adding the two groups double-counts anyone in both (the intersection); the union is found by adding the groups and subtracting the overlap, so the true count is 35 minus however many did both — at most 35, and usually fewer.",
+      "Applying λx. x to a triggers beta reduction: you substitute a for every x in the body, which is just x, so the whole thing becomes a — the identity function returns its input unchanged.",
     skillArea: "analysis",
   },
   {
     prompt:
-      "A coach will pick which 5 of 12 players start, and separately set the batting order of those 5. Which best describes the difference?",
+      "In the expression λx. (x + y), one variable is bound and the other is free. Which statement reasons about this correctly?",
     options: [
-      "Choosing who starts is a combination (order doesn't matter); setting the batting order is a permutation (order matters), with more possibilities",
-      "Both are permutations, since players are involved either way",
-      "Both are combinations, because the same players appear in each",
-      "Choosing who starts is a permutation and the batting order is a combination",
+      "x is bound (the local name the function introduces, whose name is arbitrary) while y is free (it refers to something from outside the function)",
+      "Both x and y are bound, because they both appear inside the function",
+      "Both are free, since neither has a value assigned yet",
+      "y is bound and x is free, because y is written second",
     ],
     modelAnswer:
-      "Picking the five is a combination — the same group is the same roster in any order — while ordering them is a permutation, since rearranging makes a different lineup; because each group can be reordered many ways, the batting-order question has more possibilities.",
+      "The x is bound — it is the placeholder the λ introduces and its name could be changed freely — while y is free, since nothing in the function introduces it, so it must refer to something in the surrounding context.",
     skillArea: "inference",
   },
   {
     prompt:
-      "Someone says, 'Counting is trivial — you just count.' Given the course, why is that misleading?",
+      "Someone says, 'Running a lambda calculus program must mean executing instructions on a processor, like any other program.' Given the course, why is that misleading?",
     options: [
-      "Because once possibilities are too many to list, you need techniques like the multiplication principle and must decide whether order matters",
-      "Because counting is actually impossible for groups larger than ten",
-      "Because counting always requires calculus once the numbers get big",
-      "Because the answer is always simply the number of items you started with",
+      "Because there is no processor — computation is rewriting by beta reduction, substituting arguments into functions step by step until no function meets an argument (normal form)",
+      "Because lambda calculus programs can't actually compute anything at all",
+      "Because the lambda calculus runs only on specially built hardware",
+      "Because it always requires translating the program into numbers first",
     ],
     modelAnswer:
-      "When outcomes are too numerous to list, you reason with the multiplication principle and decide whether order matters (permutation) or not (combination); getting that one judgment wrong over- or under-counts badly, so 'just count' hides a real skill.",
+      "The lambda calculus has no machine or instructions; 'running' an expression means repeatedly applying beta reduction — substituting each argument for its parameter — until the expression reaches normal form, which is the answer.",
     skillArea: "evaluation",
   },
 ];
@@ -251,83 +251,83 @@ const SUBJECT_THIRD: DiagItem[] = [
 const SUBJECT_TWOTHIRDS: DiagItem[] = [
   {
     prompt:
-      "You flip a fair coin twice and a friend says, 'The chance of at least one head is 1/2 + 1/2 = 1, so it's certain.' What's the best correction?",
+      "The Church numeral for two is λf. λx. f (f x), and zero is λf. λx. x. A student asks what makes the first one 'two.' The best answer is:",
     options: [
-      "You can't just add — the flips are independent, so find the chance of no heads (1/2 × 1/2 = 1/4) and subtract from 1, giving 3/4",
-      "That's right; two flips guarantee at least one head",
-      "You should multiply 1/2 by 1/2 to get the chance of at least one head",
-      "The chance is exactly 1/2, the same as a single flip",
+      "A Church numeral encodes a number as how many times it applies a function f to a starting value x — so 'two' applies f exactly twice, and zero applies it not at all",
+      "It is two because it has two λ symbols in front",
+      "It is two because the letter x appears twice in the expression",
+      "There's nothing numeric about it; the name 'two' is arbitrary",
     ],
     modelAnswer:
-      "Adding chances would push probabilities past 1; instead, for independent events you multiply to get the chance of two tails (1/4), so the chance of at least one head is 1 − 1/4 = 3/4, not a certainty.",
-    skillArea: "evaluation",
+      "Church numerals represent a number by repetition: the numeral n applies a function f to x exactly n times, so λf. λx. f (f x) is 'two' because f is applied twice, while zero applies it zero times — number becomes a count of applications.",
+    skillArea: "analysis",
   },
   {
     prompt:
-      "A bakery wants the most profit but has limited flour, oven time, and labor. Why does linear programming say you only need to check the 'corners'?",
+      "In the lambda calculus, TRUE is λa. λb. a and FALSE is λa. λb. b. Why does this make 'if-then-else' come almost for free?",
     options: [
-      "Because the best value of the objective always occurs at a corner of the feasible region, so a few corner points cover every case",
-      "Because the corners are simply easier to draw than the middle",
-      "Because the middle of the region is forbidden by the constraints",
-      "Because profit is always largest at the very center of the options",
+      "Because a boolean is a chooser — give it the then-branch and the else-branch and TRUE returns the first while FALSE returns the second, which is exactly what if-then-else does",
+      "Because every boolean must first be converted into a Church numeral",
+      "Because TRUE and FALSE are really just the numbers one and zero in disguise",
+      "Because the lambda calculus has a built-in if statement these stand for",
     ],
     modelAnswer:
-      "The constraints carve out a feasible region, and the corner principle guarantees the optimum sits at a corner where boundaries meet — so instead of testing endless plans you evaluate the objective at the handful of corners and pick the best.",
+      "Encoding TRUE and FALSE as functions that pick the first or second of two arguments means a condition is its own selector: applying it to the two branches yields the chosen one, so if-then-else is just applying the boolean to the branches.",
     skillArea: "inference",
   },
   {
     prompt:
-      "A café wants both to combine this month's drink sales with last month's and to solve for prices from a couple of receipts. How do matrices help?",
+      "A factorial function has no name, so it can't call itself to recurse. A friend concludes recursion is impossible in the lambda calculus. Why is that wrong?",
     options: [
-      "A matrix stores the numbers in a structured grid, so addition combines matching entries in one step and a system of equations can be solved by a fixed procedure",
-      "Matrices can add numbers but are useless for solving equations",
-      "Matrices only help when there is exactly one number to track",
-      "You must use calculus, since matrices can't handle real data",
+      "Because you can pass the function to itself as an argument, and the Y combinator automates exactly this self-application to produce recursion with no names at all",
+      "Because the lambda calculus secretly allows you to name functions after all",
+      "Because recursion is replaced by simply writing the function out infinitely many times",
+      "Because only built-in loops, not functions, can repeat in the lambda calculus",
     ],
     modelAnswer:
-      "A matrix is a grid where each position has a fixed meaning, so adding two matrices combines matching entries at once, and packing a system of equations into a matrix lets you solve the whole thing with one organized, mechanical procedure.",
-    skillArea: "analysis",
+      "A nameless function can still recurse by receiving itself as an argument; the Y combinator is a fixed-point combinator that wires up this self-application automatically, so recursion arises with no names — defeating the 'it can't call itself' objection.",
+    skillArea: "evaluation",
   },
 ];
 
 const SUBJECT_AFTER: DiagItem[] = [
   {
     prompt:
-      "Two friends save the same total, but one starts ten years earlier in a compounding account. Why can the early starter end up with far more?",
+      "A friend reasons, 'The lambda calculus is so tiny — just functions — that it must be weaker than a real computer with memory and instructions.' Drawing on the unit, the strongest correction is:",
     options: [
-      "Because compound interest pays interest on interest, and the extra early years give the money more time to multiply — and the late, high-balance years add the most",
-      "Because the early starter must have chosen a higher interest rate",
-      "Because simple interest always beats compound interest over time",
-      "It can't — equal total contributions always grow to the same amount",
+      "Not so — the lambda calculus and Turing machines can each simulate the other, so despite looking utterly different they have exactly the same computational power",
+      "That's right; pure functions can never match a machine with memory",
+      "It's actually stronger, since it can solve problems no computer can",
+      "There's no way to compare two such different systems at all",
     ],
     modelAnswer:
-      "Compounding grows money on itself and accelerates, so the largest gains come late when the balance is biggest; the early starter's money spends more years compounding, so even with the same total contributed it grows into a larger sum.",
+      "Two very different models — a tape-and-head Turing machine and pure functions — can each emulate the other, so they compute exactly the same things; the lambda calculus's small size doesn't limit its power, which is the heart of the Church–Turing thesis.",
     skillArea: "evaluation",
   },
   {
     prompt:
-      "A friend insists, 'A test that's 99% accurate means a positive result is almost certainly correct.' Drawing on the unit, the strongest correction is:",
+      "A friend insists, 'With enough cleverness, someone could write one program that decides whether any given program will eventually halt.' Drawing on the unit, the strongest correction is:",
     options: [
-      "Not necessarily — for a rare condition the conditional probability of being sick given a positive can be low, because false positives can outnumber true ones",
-      "That's right; 99% accuracy always means a positive is 99% likely to be correct",
-      "It's impossible to say anything about the result either way",
-      "A positive result is meaningless because tests are never accurate",
+      "Not possible — the halting problem is provably unsolvable, so no single program can decide for every possible program whether it halts",
+      "That's right; a sufficiently advanced program could always tell",
+      "It's only impossible because today's computers are too slow",
+      "Halting can be decided, but only for programs written in the lambda calculus",
     ],
     modelAnswer:
-      "What a positive means is a conditional probability that depends on how common the condition is; when a disease is rare, the many false positives among the healthy majority can swamp the few true positives, so a positive can be far from certain.",
+      "Because the lambda calculus and Turing machines are equivalent, the halting problem applies to both: it is provably impossible to write a program that decides, for every program, whether it eventually halts — a fundamental limit, not a matter of cleverness or speed.",
     skillArea: "inference",
   },
   {
     prompt:
-      "A friend says, 'Finite math is just a grab-bag of unrelated tricks — it doesn't add up to anything real.' Drawing on the unit, the strongest reply is:",
+      "A friend says, 'The lambda calculus is just an abstract toy with no connection to the real languages programmers actually use.' Drawing on the unit, the strongest reply is:",
     options: [
-      "It's a toolbox whose tools combine on real problems — e.g. counting and probability find a claim's chance, then the math of money values the payouts",
-      "She's right; the topics never connect to each other",
-      "It only matters inside a classroom, never in real life",
-      "The tools are useful only one at a time, never together",
+      "Real languages are essentially the lambda calculus plus conveniences — names, loops, native numbers and types as sugar over substitution — and Lisp, ML, Haskell, and first-class functions everywhere descend directly from it",
+      "She's right; modern languages owe nothing to the lambda calculus",
+      "It matters only to mathematicians, never to working programmers",
+      "The connection is purely coincidental and not worth studying",
     ],
     modelAnswer:
-      "Finite math's power is in combining tools: pricing insurance uses counting and probability for the chance of a claim and the math of money to value future payouts, with sets and logic organizing the categories — unified by a habit of making messy decisions countable and solvable.",
+      "The lambda calculus is the backbone of real languages: features like names, loops, and built-in numbers are conveniences layered over function application and substitution, and whole families (Lisp, ML, Haskell) plus first-class functions in mainstream languages trace straight back to it.",
     skillArea: "evaluation",
   },
 ];
@@ -440,7 +440,7 @@ const BASE_CONTENT: BaseContent[] = PHASE_ORDER.flatMap((phase) => {
     {
       instrument: "subject" as const,
       phase,
-      baseTitle: `Finite Math Check — ${PHASE_LABEL[phase]}`,
+      baseTitle: `Lambda Calculus Check — ${PHASE_LABEL[phase]}`,
       items: subjectItems[phase],
     },
     {

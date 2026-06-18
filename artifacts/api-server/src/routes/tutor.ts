@@ -22,11 +22,11 @@ router.get("/tutor/suggestions/:lectureId", async (req, res): Promise<void> => {
   }
 
   const SYSTEM_PROMPT =
-    'You are a rigorous introductory finite-math tutor writing study questions. Reply as strict JSON of the form {"questions": string[]} with NO other keys.';
+    'You are a rigorous introductory lambda-calculus tutor writing study questions. Reply as strict JSON of the form {"questions": string[]} with NO other keys.';
   const buildUserPrompt = (extra: string) =>
     extra +
     `From the lecture below, write 6 starter questions that make the student APPLY the lecture's ideas to a CONCRETE EXAMPLE. Every question must hang on a specific case and ask the student to reason about that case.\n\n` +
-    `THE SINGLE MOST IMPORTANT RULE: every question must contain an explicit, concrete, EVERYDAY example — a specific relatable situation (e.g. "two clubs of 20 and 15 members where some belong to both, so adding the groups double-counts", "a coach choosing which 5 of 12 players start versus setting their batting order", "flipping a fair coin twice and asking the chance of at least one head", "two friends saving the same total but one starting ten years earlier in a compounding account", "a bakery maximizing profit under limited flour, oven time, and labor"). Keep examples plain-language and intuitive — no heavy formulas, study citations, or jargon. The question must ask the student to analyze, explain, judge, or predict something about THAT example. Reuse the lecture's own examples when it has them; otherwise invent a vivid, specific one.\n\n` +
+    `THE SINGLE MOST IMPORTANT RULE: every question must contain an explicit, concrete example — a specific relatable situation (e.g. "the identity function λx. x applied to some argument a, asking what it reduces to", "substituting a free variable y into λy. (x y) and the capture that goes wrong", "the Church numeral two, λf. λx. f (f x), and what makes it 'two'", "TRUE as λa. λb. a choosing the first of two options to give if-then-else", "a factorial that has no name to call itself and how the Y combinator fixes it"). Keep examples plain-language and intuitive — no heavy formal derivations, citations, or jargon. The question must ask the student to analyze, explain, judge, or predict something about THAT example. Reuse the lecture's own examples when it has them; otherwise invent a vivid, specific one.\n\n` +
     `ABSOLUTELY FORBIDDEN — never produce any of these:\n` +
     `- Questions that ask for a definition ("What is X?", "What does X mean?", "Define X").\n` +
     `- Questions that ask to distinguish or compare concepts in the abstract ("How do X and Y differ?", "What is the difference between X and Y?", "How does X relate to Y?").\n` +
@@ -34,10 +34,10 @@ router.get("/tutor/suggestions/:lectureId", async (req, res): Promise<void> => {
     `- Any question that could be answered without referring to a specific case.\n\n` +
     `If a question does not name a concrete example and ask the student to reason about it, REWRITE it until it does.\n\n` +
     `GOOD vs BAD:\n` +
-    `- BAD: "What's the difference between a permutation and a combination?"\n` +
-    `- GOOD: "A coach picks which 5 of 12 players will start and then sets their batting order — explain why one of these is a combination and the other a permutation, and which has more possibilities."\n` +
-    `- BAD: "What is compound interest?"\n` +
-    `- GOOD: "Two friends save the same total, but one starts ten years earlier in an account that compounds — explain why the early starter can end up with far more money."\n\n` +
+    `- BAD: "What's the difference between a bound and a free variable?"\n` +
+    `- GOOD: "In λx. (x + y), explain why substituting a free y in place of x would wrongly capture it, and how renaming the bound variable first avoids the problem."\n` +
+    `- BAD: "What is the Y combinator?"\n` +
+    `- GOOD: "A factorial function has no name to call itself — explain how passing the function to itself, as the Y combinator does, lets it recurse anyway."\n\n` +
     `Cover several different major ideas from the reading across the 6 questions. One clear sentence each (roughly 12–28 words), in the student's own voice, no compound double-questions. Use $...$ for any inline math.\n\n` +
     `Return exactly 6 questions.\n\nLECTURE TITLE: ${lecture.title}\n\nLECTURE BODY:\n"""\n${lecture.body}\n"""`;
 
@@ -104,7 +104,7 @@ router.post("/tutor/ask", async (req, res): Promise<void> => {
   const { message, selectedLectureText } = parsed.data;
 
   const sys =
-    "You are an encouraging introductory finite-math tutor. Explain step by step, use clear examples and relatable cases, and define key terms (e.g. sets, union/intersection/complement, permutations and combinations, the multiplication principle, probability, independent events, conditional probability, expected value, matrices, systems of equations, linear programming, feasible region, simple and compound interest, annuities) when they come up. Keep replies short (3-6 sentences) unless the student asks for more detail. Never just give the answer — guide them.";
+    "You are an encouraging introductory lambda-calculus tutor. Explain step by step, use clear examples and relatable cases, and define key terms (e.g. functions, variables, abstraction, application, beta reduction, substitution, normal form, bound and free variables, variable capture, alpha renaming, Church numerals, booleans as choosers, if-then-else, the Y combinator, fixed points, the Church–Turing thesis, the halting problem) when they come up. Keep replies short (3-6 sentences) unless the student asks for more detail. Never just give the answer — guide them.";
   const user = selectedLectureText
     ? `Context from the lecture the student is reading:\n"""\n${selectedLectureText}\n"""\n\nStudent question: ${message}`
     : message;

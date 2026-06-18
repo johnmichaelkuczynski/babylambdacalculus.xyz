@@ -4,14 +4,14 @@ import { AppShell } from '../AppShell';
 
 export function Scene3() {
   const topics = [
-    "1.1 What finite math is: useful math without the infinite",
-    "1.2 Sets and logic: organizing the world into categories",
-    "1.3 The art of counting: permutations and combinations",
-    "1.4 Probability: measuring what's likely",
-    "1.5 Matrices: organizing and solving with grids of numbers",
-    "1.6 Linear programming: getting the most out of limited resources",
-    "1.7 The math of money: interest, loans, and growth",
-    "1.8 Putting finite math to work (Capstone)"
+    "1.1 What the lambda calculus is: everything is a function",
+    "1.2 Application and substitution: computation as rewriting",
+    "1.3 Bound and free: variables, renaming, and why it matters",
+    "1.4 Building numbers from nothing: Church numerals",
+    "1.5 Booleans, logic, and choice from pure functions",
+    "1.6 Recursion from nowhere: the Y combinator",
+    "1.7 The punchline: lambda calculus equals Turing machines",
+    "1.8 From lambda to real languages (Capstone)"
   ];
 
   return (

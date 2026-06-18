@@ -32,7 +32,7 @@ export function Scene7() {
               className="text-center mb-12"
             >
               <div className="text-sm font-mono text-white/50 mb-2 uppercase tracking-widest">Assessment Graded</div>
-              <h2 className="text-4xl font-display font-bold text-white">Unit 1: Useful math without the infinite</h2>
+              <h2 className="text-4xl font-display font-bold text-white">Unit 1: Everything is a function</h2>
             </motion.div>
 
             <div className="flex gap-8 items-center">
@@ -65,7 +65,7 @@ export function Scene7() {
                     <span className="font-bold text-sm uppercase tracking-wider text-white/70">Grader Rationale</span>
                   </div>
                   <p className="text-white/80 leading-relaxed text-lg">
-                    Excellent grasp of the core concepts. You clearly explained why choosing a team is a combination while ordering it is a permutation. Minor deduction on question 4 regarding conditional probability and why a positive test can still be uncertain.
+                    Excellent grasp of the core concepts. You clearly explained how beta reduction substitutes an argument for the parameter, and why the identity function returns its input. Minor deduction on question 4 regarding variable capture and why renaming a bound variable avoids it.
                   </p>
                 </motion.div>
 

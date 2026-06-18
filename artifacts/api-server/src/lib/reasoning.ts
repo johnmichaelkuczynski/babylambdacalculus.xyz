@@ -285,7 +285,7 @@ function deterministicFeedback(
         : " Your reasoning was solid across the items.";
     return `Thanks for working through this reasoning check.${overall?.value ? ` You scored ${overall.value}.` : ""}${weakLine} Remember that a strong answer follows only from the reasons given — distinguish what is stated, what is assumed, and what is merely plausible.`;
   }
-  return `Thanks for working through these finite-math cases.${overall?.value ? ` You scored ${overall.value}.` : ""} Strong answers here come from reasoning about the case — reaching for the tool that fits it, pointing to the detail that decides it (does order matter? do the groups overlap? are the events independent?), and resisting 'obvious' guesses like 'just add the two groups' or 'a 99%-accurate test is almost always right'.`;
+  return `Thanks for working through these lambda-calculus cases.${overall?.value ? ` You scored ${overall.value}.` : ""} Strong answers here come from reasoning about the case — tracing what a function does to its argument, pointing to the detail that decides it (does this beta-reduce or get stuck? is the variable bound or free? would substitution capture a name?), and resisting 'obvious' guesses like 'applying a function never changes it' or 'a tiny language must be weaker than a real computer'.`;
 }
 
 export async function generateFeedback(
@@ -298,7 +298,7 @@ export async function generateFeedback(
     .join("\n");
   const system =
     instrument === "subject"
-      ? "You are an instructor giving warm, specific feedback on a student's finite-math reasoning check (realistic short cases about the course material — counting, probability, sets, optimization, money). 2-4 sentences. Note their overall performance and offer one concrete way to reason better about cases. Use only the metrics provided; do not invent numbers. Plain prose, no markdown headings."
+      ? "You are an instructor giving warm, specific feedback on a student's lambda-calculus reasoning check (realistic short cases about the course material — functions and application, beta reduction and substitution, bound vs. free variables, Church numerals, booleans and logic, the Y combinator, Turing equivalence). 2-4 sentences. Note their overall performance and offer one concrete way to reason better about cases. Use only the metrics provided; do not invent numbers. Plain prose, no markdown headings."
       : "You are a reasoning instructor giving warm, specific feedback on a student's general-reasoning check. 2-4 sentences. Note overall performance and the skill areas to strengthen, using only the metrics provided. Plain prose, no markdown headings.";
   const user = `Assessment: ${assessmentTitle}\nResult summary: ${summary.headline}\nMetrics:\n${metricsText}`;
   try {
@@ -412,8 +412,8 @@ async function generateSubjectVariant(
 ): Promise<GeneratedItemContent[]> {
   const spec = genSpecFor("subject", phase);
   const system =
-    "You are an assessment author writing ORIGINAL finite-math questions for an intro course. " +
-    "Every question must be a short, realistic CASE (a concrete everyday scenario about finite math — sets and overlaps, counting with permutations/combinations, probability, matrices, linear programming, or interest and the math of money) that rewards REASONING about the case, never recall of a definition or a one-word fact. No heavy calculations — reward plain-language reasoning. " +
+    "You are an assessment author writing ORIGINAL lambda-calculus questions for an intro course. " +
+    "Every question must be a short, realistic CASE (a concrete scenario about the lambda calculus — functions and application, beta reduction and substitution, bound vs. free variables and capture, Church numerals, booleans and logic and choice, the Y combinator and recursion, or Turing equivalence and real languages) that rewards REASONING about the case, never recall of a definition or a one-word fact. No heavy formal derivations — reward plain-language reasoning. " +
     "Each has exactly four answer options with one clearly best, well-supported answer. " +
     "List the CORRECT option FIRST, followed by three plausible but worse distractors (an over-simple single-cause claim, an 'obvious'/sensational answer, or an irrelevant one). " +
     "Also write a one-sentence model answer explaining why the first option is best. " +
@@ -422,7 +422,7 @@ async function generateSubjectVariant(
     `Stay strictly within this scope: ${spec.topicFocus} ` +
     'Respond ONLY as JSON of the form {"items":[{"prompt":"short case ending in a question","options":["best","worse","worse","worse"],"modelAnswer":"why the first option is best"}]}.';
   const user =
-    `Write ${count} new, distinct finite-math case questions within the scope above.\n` +
+    `Write ${count} new, distinct lambda-calculus case questions within the scope above.\n` +
     `For style only (do NOT copy these): ${JSON.stringify(examplePrompts)}.`;
   const out = await chatJson<{
     items?: { prompt?: unknown; options?: unknown; modelAnswer?: unknown }[];

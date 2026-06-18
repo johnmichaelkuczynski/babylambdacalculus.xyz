@@ -76,7 +76,7 @@ export function Scene2() {
                   <div key={i} className="flex gap-3 items-start">
                     <div className="w-2 h-2 rounded-full bg-[#10B981] mt-1.5" />
                     <div>
-                      <div className="text-sm font-medium text-[#1A2B3D]">Practice: The Art of Counting</div>
+                      <div className="text-sm font-medium text-[#1A2B3D]">Practice: Church Numerals</div>
                       <div className="text-xs text-[#718096]">Score: 10/10 • 2h ago</div>
                     </div>
                   </div>

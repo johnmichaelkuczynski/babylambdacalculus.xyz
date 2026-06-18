@@ -4,8 +4,8 @@ import { AppShell } from '../AppShell';
 
 export function Scene5() {
   const [phase, setPhase] = useState(0);
-  const question = "If 20 people hike and 15 kayak, why isn't the total who signed up just 35?";
-  const answer = "Because some people did both. Adding the two groups counts those overlap members twice, so you subtract the overlap once: with 6 in both, it's 20 + 15 − 6 = 29 different people.";
+  const question = "When I apply the identity function λx. x to an argument a, why does it just give back a?";
+  const answer = "Because applying a function does beta reduction: you substitute the argument for the parameter. The body of λx. x is just x, so replacing x with a leaves a — the identity function returns whatever it is given.";
   const [typedQ, setTypedQ] = useState("");
   const [typedA, setTypedA] = useState("");
 
