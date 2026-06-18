@@ -11,3 +11,4 @@
 - [Subject conversion blind spots](subject-conversion-blindspots.md) — when rebranding the course subject, video artifacts also hide subject copy in index.html OG/Twitter meta + a per-artifact YOUTUBE_DESCRIPTION.md, not just scene .tsx files.
 - [OpenAPI adjacent-op edits](openapi-adjacent-op-edits.md) — inserting an op before another can orphan its response `content` block & flip a generated client return type; include the full responses block in old_string and verify generated Promise<…> after codegen.
 - [Video content verification](video-content-verification.md) — screenshots reload a video-js artifact to scene 0; verify multi-scene walkthroughs by grepping Scene*.tsx for required real copy, not screenshots.
+- [DB schema push bootstrap](db-schema-push-bootstrap.md) — api-server seed only inserts rows, never creates tables; run `pnpm --filter @workspace/db run push` before restart or every course route 500s on "relation does not exist".
