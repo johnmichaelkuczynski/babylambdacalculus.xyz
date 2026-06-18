@@ -30,14 +30,14 @@ Start learning — no instructor, no textbook, no prior math.
 ## ⏱️ Chapters
 
 0:00 Everything is a function
-0:06 Your dashboard at a glance
-0:10 One unit, eight topics
-0:14 Lessons at three depths
-0:18 A section-scoped AI tutor
-0:24 Adaptive practice that adjusts to you
-0:30 AI grading + two-layer AI detection
-0:36 Progress and mastery analytics
-0:40 Baby Lambda Calculus
+0:05 Your dashboard at a glance
+0:10 Lessons at three depths (with a section-scoped AI tutor)
+0:15 Adaptive practice that adjusts to you
+0:19 Practice first, then the AI-graded homework, unit test & final
+0:23 AI-graded feedback on every submission
+0:27 Progress and mastery analytics
+0:32 Operator diagnostics + two-layer AI detection
+0:37 Baby Lambda Calculus
 
 ---
 

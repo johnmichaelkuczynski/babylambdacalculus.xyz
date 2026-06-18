@@ -23,16 +23,22 @@ export function Scene1() {
       <motion.div 
         className="absolute inset-0 z-0"
         initial={{ scale: 1.15, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.4 }}
+        animate={{ scale: 1, opacity: 0.22 }}
         transition={{ duration: 5, ease: "easeOut" }}
       >
         <img 
           src={`${import.meta.env.BASE_URL}screens/landing.jpg`} 
           alt="Landing" 
-          className="w-full h-full object-cover object-top"
+          className="w-full h-full object-cover object-top blur-sm"
           style={{ maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 30%, rgba(0,0,0,0.1) 100%)', WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 30%, rgba(0,0,0,0.1) 100%)' }}
         />
       </motion.div>
+
+      {/* Contrast vignette so the hero wordmark reads cleanly over the screenshot */}
+      <div
+        className="absolute inset-0 z-[5] pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 45%, rgba(11,19,30,0.78) 0%, rgba(11,19,30,0.35) 55%, rgba(11,19,30,0) 100%)' }}
+      />
 
       <div className="relative z-10 text-center px-12 mt-32">
         <motion.div
