@@ -62,7 +62,7 @@ export default function Landing() {
             <Search className="w-4 h-4" />
           </div>
           <span className="font-serif font-semibold text-lg tracking-tight">
-            Baby Lambda Calculus
+            Basic Lambda Calculus
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -89,15 +89,15 @@ export default function Landing() {
         <section className="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-secondary-foreground text-xs font-medium mb-6">
             <BarChart3 className="w-3.5 h-3.5" />
-            A friendly, one-unit intro to the lambda calculus
+            A complete, one-unit introduction to the lambda calculus
           </div>
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-primary leading-tight mb-5">
             The tiny language of functions behind all of computing. Let's understand it together.
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-            A self-paced course that teaches, tutors, drills, and grades you —
-            the lambda calculus in plain language, no prior math or coding needed — every idea
-            is explained in plain words. Perfect for curious students and grown-ups alike.
+            A self-paced course that teaches, tutors, drills, and grades you — the
+            lambda calculus built carefully from first principles, for anyone taking
+            up the subject from the ground up.
           </p>
           <div className="flex items-center justify-center gap-3">
             <Link href="/sign-up">
@@ -162,7 +162,7 @@ export default function Landing() {
       </main>
 
       <footer className="border-t border-border px-6 py-6 text-center text-sm text-muted-foreground">
-        Baby Lambda Calculus — where the curriculum, the tutor, the grader, and the
+        Basic Lambda Calculus — where the curriculum, the tutor, the grader, and the
         integrity check all live in one room.
       </footer>
     </div>

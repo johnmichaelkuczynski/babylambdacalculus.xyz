@@ -1,8 +1,8 @@
-# 🔎 Baby Lambda Calculus
+# 🔎 Basic Lambda Calculus
 
-**A friendly, one-unit intro to the lambda calculus that teaches, tutors, drills, and grades itself — for curious students and adults alike.**
+**A self-contained, one-unit introduction to the lambda calculus that teaches, tutors, drills, and grades itself — for people taking up the subject from the ground up.**
 
-Baby Lambda Calculus is a self-paced, single-user web course that delivers a plain-language introduction to the lambda calculus — the tiny language where everything is a function and computation is just substitution — taught, tutored, drilled, and graded entirely by AI, with built-in academic-integrity enforcement. No prior math or coding required. Every idea is explained intuitively in plain words rather than heavy formulas: how a function with a placeholder computes by substitution, how renaming variables avoids confusion, how to build numbers and booleans out of pure functions, how recursion appears out of nowhere, and why this little language is exactly as powerful as any computer.
+Basic Lambda Calculus is a self-paced, single-user web course that delivers a complete introduction to the lambda calculus — the tiny language where everything is a function and computation is just substitution — taught, tutored, drilled, and graded entirely by AI, with built-in academic-integrity enforcement. It is *basic* in the sense that it assumes no prior exposure to the subject, not in the sense of being thin: it builds the whole theory carefully from first principles — how a function with a placeholder computes by substitution, how renaming variables avoids capture, how to build numbers and booleans out of pure functions, how recursion arises from the Y combinator, and why this language is exactly as powerful as any computer.
 
 ---
 
@@ -95,11 +95,11 @@ Open the **Diagnostics** page in the app (or hit the API directly) to run:
 
 ## 📚 Who it's for
 
-- **Middle schoolers & curious adults** — a complete, plain-language intro to the lambda calculus with on-demand tutoring and adaptive practice.
+- **Adults taking up a new discipline** — graduate students, researchers, and faculty who need a careful, from-first-principles entry into the lambda calculus, with on-demand tutoring and adaptive practice.
 - **Instructors & curriculum designers** — a working reference for AI-taught, AI-graded, AI-detection-screened coursework.
 - **Academic-integrity researchers** — a live testbed for layered AI-authorship detection (text classification + keystroke behavior).
 - **Product & engineering teams** — a reference implementation of contract-first full-stack architecture, streaming AI UX, and self-diagnostic tooling.
 
 ---
 
-*Baby Lambda Calculus — where the curriculum, the tutor, the grader, and the integrity check all live in one room.*
+*Basic Lambda Calculus — where the curriculum, the tutor, the grader, and the integrity check all live in one room.*

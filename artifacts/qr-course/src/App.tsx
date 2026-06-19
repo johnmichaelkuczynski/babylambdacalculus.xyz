@@ -235,13 +235,13 @@ function ClerkProviderWithRoutes() {
         signIn: {
           start: {
             title: "Welcome back",
-            subtitle: "Sign in to continue your Baby Lambda Calculus course",
+            subtitle: "Sign in to continue your Basic Lambda Calculus course",
           },
         },
         signUp: {
           start: {
             title: "Create your account",
-            subtitle: "Start your lambda calculus journey with Baby Lambda Calculus",
+            subtitle: "Start your lambda calculus journey with Basic Lambda Calculus",
           },
         },
       }}

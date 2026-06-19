@@ -56,7 +56,7 @@ export function Scene1() {
           animate={phase >= 1 ? { y: 0, opacity: 1, filter: 'blur(0px)' } : { y: 40, opacity: 0, filter: 'blur(10px)' }}
           transition={{ type: 'spring', damping: 24, stiffness: 100 }}
         >
-          Baby Lambda<br />Calculus
+          Basic Lambda<br />Calculus
         </motion.h1>
         
         <motion.p 

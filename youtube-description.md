@@ -1,29 +1,26 @@
-# YouTube — Baby Lambda Calculus
+# YouTube — Basic Lambda Calculus
 
-## 🎬 Title options (pick one)
+## 🎬 Title
 
-1. Baby Lambda Calculus — an AI course that teaches, tutors & grades itself
-2. I built an AI-powered course on the lambda calculus (it even catches AI cheating)
-3. Everything Is a Function — a friendly lambda-calculus course for curious students & adults
+Basic Lambda Calculus — AI-Powered Course
 
 ---
 
 ## 📝 Description (paste into YouTube)
 
-Meet **Baby Lambda Calculus** — a friendly, one-unit intro to the lambda calculus that teaches, tutors, drills, and grades itself, entirely with AI. No prior math, no coding, no jargon. Just plain-language lessons about the tiny language where everything is a function — how to build computation out of nothing but functions and substitution, make numbers, booleans, and even recursion appear from pure functions, and see why this one idea is as powerful as any computer, explained intuitively from start to finish.
+Basic Lambda Calculus is a complete, one-unit course on the lambda calculus that teaches, tutors, drills, and grades itself, entirely with AI. It builds the whole theory from first principles: the language where everything is a function, computation as substitution, bound and free variables and capture-avoiding renaming, Church numerals, booleans and logic from pure functions, recursion via the Y combinator, the equivalence with Turing machines, and the path from lambda to the real programming languages we use today.
 
 In this video you'll see the whole course in action:
 
-🔎 Eight plain-language topics — from "what the lambda calculus is" all the way to "from lambda to real languages"
-📖 Three-depth lessons — read any topic Short, Medium, or Long, same ideas at your pace
+🔎 Eight topics — from what the lambda calculus is all the way to from lambda to real languages
+📖 Three-depth lessons — read any topic Short, Medium, or Long, the same material at the depth you want
 💬 A section-scoped AI tutor that answers questions about the exact paragraph you're reading
 🎯 Adaptive practice that gets harder when you're on a streak and eases off when you're stuck
-📝 AI-graded homework, a unit test, and a final — each with real written feedback
-🛡️ Two-layer AI-authorship detection on every answer you submit (a text classifier AND a keystroke-pattern detector)
+📝 AI-graded homework, a unit test, and a final — each with a written rationale and a percent score
+🛡️ Two-layer AI-authorship detection on every submission (a text classifier AND a keystroke-pattern detector)
+📊 Live analytics and one-click operator diagnostics that verify the whole stack end-to-end
 
-Perfect for curious adults wanting a quick but meaningful intro to the lambda calculus, students exploring functions and computation, instructors exploring AI-taught coursework, and academic-integrity researchers.
-
-Start learning — no instructor, no textbook, no prior math.
+Built for adults taking up the subject from the ground up — graduate students, researchers, and faculty entering a new discipline — as well as instructors evaluating AI-taught coursework and academic-integrity researchers.
 
 ---
 
@@ -37,13 +34,13 @@ Start learning — no instructor, no textbook, no prior math.
 0:23 AI-graded feedback on every submission
 0:27 Progress and mastery analytics
 0:32 Operator diagnostics + two-layer AI detection
-0:37 Baby Lambda Calculus
+0:37 Basic Lambda Calculus
 
 ---
 
 ## 🏷️ Hashtags
 
-#LambdaCalculus #FunctionalProgramming #ComputerScience #CSEducation #EdTech #OnlineLearning #LearnToCode #LearnSomethingNew
+#LambdaCalculus #FunctionalProgramming #ComputerScience #CSEducation #EdTech #OnlineLearning #ComputationTheory #YCombinator
 
 ---
 

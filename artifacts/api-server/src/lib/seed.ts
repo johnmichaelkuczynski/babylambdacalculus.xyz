@@ -14,7 +14,7 @@ import { logger } from "./logger";
 // the value stored in seed_meta; a mismatch forces a full re-seed, so content
 // edits self-heal in every environment (including a republished production)
 // without a manual database wipe.
-const SEED_CONTENT_VERSION = "2026-06-18-baby-lambda-calculus-v1";
+const SEED_CONTENT_VERSION = "2026-06-19-basic-lambda-calculus-v1";
 
 type SeedTopic = {
   slug: string;
@@ -26,7 +26,7 @@ type SeedTopic = {
 };
 
 const TOPICS: SeedTopic[] = [
-  // Unit 1 — Baby Lambda Calculus: everything is a function
+  // Unit 1 — Basic Lambda Calculus: everything is a function
   {
     slug: "what-lambda-calculus-is",
     title: "What the lambda calculus is",
@@ -384,7 +384,7 @@ const ASSIGNMENTS: SeedAssignment[] = [
   },
   {
     kind: "test",
-    title: "Unit Test — Baby Lambda Calculus: Everything Is a Function",
+    title: "Unit Test — Basic Lambda Calculus: Everything Is a Function",
     weekNumber: 1,
     isTimed: true,
     timeLimitMinutes: 30,
@@ -467,7 +467,7 @@ const ASSIGNMENTS: SeedAssignment[] = [
   },
   {
     kind: "final",
-    title: "Final — Baby Lambda Calculus: Everything Is a Function",
+    title: "Final — Basic Lambda Calculus: Everything Is a Function",
     weekNumber: 1,
     isTimed: true,
     timeLimitMinutes: 45,
@@ -645,7 +645,7 @@ export async function seedReasoningPrimersIfMissing(): Promise<void> {
 }
 
 export async function seedIfEmpty(): Promise<void> {
-  // The course was migrated to the Baby Lambda Calculus syllabus. Detect the
+  // The course was migrated to the Basic Lambda Calculus syllabus. Detect the
   // marker topic; if present and the content version matches, the content is
   // current and we skip. This makes the seed self-healing across environments: a
   // database that still holds older content (e.g. a previous curriculum) is
@@ -694,7 +694,7 @@ export async function seedIfEmpty(): Promise<void> {
     const row = (existing.rows[0] ?? {}) as { n?: number };
     if ((row.n ?? 0) > 0) {
       logger.warn(
-        "Seed: stale course content detected — replacing with the Baby Lambda Calculus curriculum",
+        "Seed: stale course content detected — replacing with the Basic Lambda Calculus curriculum",
       );
       await tx.execute(
         sql`TRUNCATE TABLE answers, attempts, practice_attempts, practice_problems, practice_sessions, problems, assignments, lectures, topics, diagnostic_responses, diagnostic_attempts, diagnostic_items, diagnostic_assessments RESTART IDENTITY CASCADE`,

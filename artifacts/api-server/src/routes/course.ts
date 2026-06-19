@@ -21,9 +21,9 @@ const router: IRouter = Router();
 
 const WEEK_TITLES: Record<number, { title: string; summary: string }> = {
   1: {
-    title: "Baby Lambda Calculus: Everything Is a Function",
+    title: "Basic Lambda Calculus: Everything Is a Function",
     summary:
-      "What the lambda calculus really is and why a tiny language of nothing but functions can capture all of computation, how computation happens as beta reduction (rewriting by substitution), why bound and free variables and renaming matter, how Church numerals build numbers from nothing, how booleans and logic and choice come from pure functions, how the Y combinator conjures recursion with no names, how the lambda calculus turns out to be exactly as powerful as Turing machines, and how it all grew into the real programming languages we use — all in plain language, no prior math or coding required.",
+      "What the lambda calculus really is and why a tiny language of nothing but functions can capture all of computation, how computation happens as beta reduction (rewriting by substitution), why bound and free variables and renaming matter, how Church numerals build numbers from nothing, how booleans and logic and choice come from pure functions, how the Y combinator conjures recursion with no names, how the lambda calculus turns out to be exactly as powerful as Turing machines, and how it all grew into the real programming languages we use — all built carefully from first principles, assuming no prior exposure to the subject.",
   },
 };
 
@@ -112,7 +112,7 @@ router.get("/course/overview", async (_req, res) => {
 
   res.json(
     GetCourseOverviewResponse.parse({
-      title: "Baby Lambda Calculus",
+      title: "Basic Lambda Calculus",
       weeks,
       totals: { assignmentsCompleted, assignmentsTotal, practiceCount },
     }),
